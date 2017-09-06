@@ -1,0 +1,39 @@
+/*
+	turtle.c
+	
+	basic movement commands:
+	forward, backward, right, left, and stop
+*/
+
+int LEFT_MOTOR = 0;
+int RIGHT_MOTOR = 2;
+
+void forward() {
+	fd(LEFT_MOTOR);
+	fd(RIGHT_MOTOR);
+}
+
+void backward() {
+	bk(LEFT_MOTOR);
+	bk(RIGHT_MOTOR);
+}
+
+void right() {
+	fd(LEFT_MOTOR);
+	bk(RIGHT_MOTOR);
+}
+
+void left() {
+	bk(LEFT_MOTOR);
+	fd(RIGHT_MOTOR);
+}
+
+void stop() {
+	off(LEFT_MOTOR);
+	off(RIGHT_MOTOR);
+}
+
+void main() {
+
+}
+
