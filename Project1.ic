@@ -1,19 +1,61 @@
-/* Projects One - Line Following */	
+/* Projects One - Line Following */ 
+
+int LEFT_MOTOR = 0;
+int RIGHT_MOTOR = 2;
+int LIGHT_SENSOR = 6;
+
+void right()
+{
+    fd(LEFT_MOTOR);
+    bk(RIGHT_MOTOR);
+}
+
+void stop()
+{
+    off(LEFT_MOTOR);
+    off(RIGHT_MOTOR);
+}
+
+void forward(int speed)
+{
+    motor(LEFT_MOTOR, speed);
+    motor(RIGHT_MOTOR, speed);
+    //fd(LEFT_MOTOR);
+    //fd(RIGHT_MOTOR);
+}
 
 int readSensor() {
-	int sensor = 255 - analog(6);
-	while (1) {
-		printf("Sensor = %d\n", sensor);
-		sleep(0.1);
-	}
-	
-}		
+  while(1)
+  {
+      printf("Sensor = %d\n", analog(LIGHT_SENSOR));
+      if (analog(LIGHT_SENSOR) > 100)
+        {          
+          //forward(5);
+          motor(LEFT_MOTOR, 22);
+          motor(RIGHT_MOTOR, 22);
+          sleep(0.25);
+      }
+      else
+      {
+          stop();
+          motor(LEFT_MOTOR, -20);
+          motor(RIGHT_MOTOR, 20);
+          sleep(6.0);
+          motor(LEFT_MOTOR, 20);
+          motor(RIGHT_MOTOR, -20);
+          sleep(12.0);
+	  //Doesn't check sensor until finished turning
+	  //Need to stop sleep periodically to check sensor
+      }    
+      sleep(1.0);
+ }
+}  
 
 
 void main() {
-    readsensor();
-	
-	/* while (1) {
+    readSensor();
+ 
+ /* while (1) {
         printf("Going Forward...\n");
         fd(0);
         fd(2);
@@ -22,12 +64,9 @@ void main() {
             bk(0);
             bk(2);
             sleep(0.5);
-            /* turn */
-	    fd(0);
-	    sleep(0.5);
+            /* turn 
+     fd(0);
+     sleep(0.5);
         }
     } */ 
 }
-
-                 
-            
