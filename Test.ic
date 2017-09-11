@@ -1,3 +1,4 @@
+/*
 * Project One - Line Following
 * Austin Hamman & Andrew Mueller
 * CSC 463 - Dr. Girard
@@ -7,7 +8,7 @@ int LEFT_MOTOR = 0;
 int RIGHT_MOTOR = 2;
 int LIGHT_SENSOR = 6;
 int time = 0;
-int LINE = 20;
+int LINE = 100;
 int turn = 0;
 
 void stop()
@@ -17,55 +18,56 @@ void stop()
 }
 
 void main() {
-  while(1)
+    while(1)
       {
-      stop();
-      sleep(0.05);
-      printf("Sensor = %d\n", analog(LIGHT_SENSOR));
-      if (analog(LIGHT_SENSOR) >= LINE) {          
-          motor(LEFT_MOTOR, -25);
-          motor(RIGHT_MOTOR, -25);
-          sleep(0.5);
-      }else {
-          motor(LEFT_MOTOR, -30);
-          motor(RIGHT_MOTOR, -30);
-          sleep(1.0);
-          stop();
-          sleep(1.0);
+        stop();
+        sleep(0.05);
+        printf("Sensor = %d\n", analog(LIGHT_SENSOR));
+        if (analog(LIGHT_SENSOR) >= LINE) {          
+            motor(LEFT_MOTOR, 25);
+            motor(RIGHT_MOTOR, 25);
+            sleep(0.5);
+        }else {
+            motor(LEFT_MOTOR, 30);
+            motor(RIGHT_MOTOR, 30);
+            sleep(1.0);
+            stop();
+            sleep(1.0);
             while(analog(LIGHT_SENSOR) < LINE) {
-                if (turn == 1) {
-                        for(time = 0; analog(LIGHT_SENSOR) < LINE && time < 20; time++) {
-                         if (time <= 15){
+                if (turn == 1) {//turn left
+                    for(time = 0; analog(LIGHT_SENSOR) < LINE && time < 20; time++) {
+                        if (time <= 15){
                             turn = 1;
                         }else{
-                           turn = 0;
+                            turn = 0;
                         }
-                     
-                      printf("Sensor = %d\n", analog(LIGHT_SENSOR));
-                      motor(LEFT_MOTOR, -20);
-                        motor(RIGHT_MOTOR, 20);
+                        
+                        printf("Sensor = %d\n", analog(LIGHT_SENSOR));
+                        motor(LEFT_MOTOR, 25);
+                        motor(RIGHT_MOTOR, -25);
                         //bk(2);
                         sleep(0.5);}
                 }
-                for(time = 0; analog(LIGHT_SENSOR) < LINE && time < 20; time++) {
-                  if (time <= 15){ 
-                      turn = 0;  
-                    }else{
-                        turn = 1;
+                else{
+                    for(time = 0; analog(LIGHT_SENSOR) < LINE && time < 20; time++) {//turn right
+                        if (time <= 15){ 
+                            turn = 0;  
+                        }else{
+                            turn = 1;
+                        }
+                        printf("Sensor = %d\n", analog(LIGHT_SENSOR));
+                        motor(LEFT_MOTOR, -25);
+                        motor(RIGHT_MOTOR, 25);
+                        // bk(0);
+                        sleep(0.5);
                     }
-                  printf("Sensor = %d\n", analog(LIGHT_SENSOR));
-                  motor(LEFT_MOTOR, 20);
-                   motor(RIGHT_MOTOR, -20);
-                   // bk(0);
-                  sleep(0.5);
-                }
-              
-              stop();
-              sleep(1.0);
-              if(analog(LIGHT_SENSOR) >= LINE) {  
-                  printf("Sensor = %d\n", analog(LIGHT_SENSOR));
-                  break;
-              }/*else {
+                }  
+                stop();
+                sleep(1.0);
+                if(analog(LIGHT_SENSOR) >= LINE) {  
+                    printf("Sensor = %d\n", analog(LIGHT_SENSOR));
+                    break;
+                }/*else {
                     for(time = 0; analog(LIGHT_SENSOR) < LINE && time < 30; time++) {
                         /* if (time > 3) {turn = 0};
                       printf("Sensor = %d\n", analog(LIGHT_SENSOR));
@@ -74,8 +76,8 @@ void main() {
                         //bk(2);
                       sleep(0.5);
                    }*/
-              }
-          }
-      }    
+            }
+        }
+    }    
 }
-  
+
