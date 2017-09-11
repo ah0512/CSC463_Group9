@@ -27,6 +27,7 @@ void main() {
       }else {
           sleep(0.5);
           stop();
+          sleep(1.0);
           while(analog(LIGHT_SENSOR) < LINE) {
               for(time = 0; analog(LIGHT_SENSOR) < LINE && time < 13; time++) {
                   printf("Sensor = %d\n", analog(LIGHT_SENSOR));
@@ -35,6 +36,7 @@ void main() {
                   sleep(0.5);
               }
               stop();
+              sleep(1.0);
               if(analog(LIGHT_SENSOR) >= LINE) {  
                   printf("Sensor = %d\n", analog(LIGHT_SENSOR));
                   break;
@@ -48,6 +50,7 @@ void main() {
                    } 
               }
               stop();
+              sleep(1.0);
           }
       }    
 }
