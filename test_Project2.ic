@@ -61,16 +61,6 @@ void scanRight() {
     }
 }
 
-void reset() {
-    stop();
-    sleep(0.5);
-    fd(0);
-    fd(2);
-    sleep(0.5);
-    bk(2);
-    sleep(1.5);
-}
-
 void main () {
     while(1) {
         printf("Recent Right = %d\n", recent);
