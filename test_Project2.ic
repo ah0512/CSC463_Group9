@@ -1,0 +1,86 @@
+/*
+* Project Two - Maze with Touch Sensor
+* Austin Hamman & Andrew Mueller
+* CSC 463 - Dr. Girard
+*/
+
+int LEFT_MOTOR = 0;
+int RIGHT_MOTOR = 2;
+int recent = 0;
+int time = 0;
+
+void forward() {
+    motor(LEFT_MOTOR, -50);
+    motor(RIGHT_MOTOR, -50);
+}
+
+void backward() {
+    motor(LEFT_MOTOR, 50);
+    motor(RIGHT_MOTOR, 50);
+}
+
+void stop() {
+    off(LEFT_MOTOR);
+    off(RIGHT_MOTOR);
+}
+
+void left() {
+    motor(LEFT_MOTOR, -50);
+    motor(RIGHT_MOTOR, 50);
+}
+
+void right() {
+    motor(LEFT_MOTOR, 50);
+    motor(RIGHT_MOTOR, -50);
+}
+
+void turnBack() {
+    printf("Front Bumper!!\n");
+    /* Go Backwards */
+    fd(0);
+    fd(2);
+    sleep(0.5);
+    /* Turn */
+    bk(0);
+    sleep(1.0);
+}
+
+void scanRight() {
+    printf("Enter Method\n");
+    fd(0);
+    fd(2);
+    sleep(0.25);
+    for(time = 0; time < 10; time++){
+        motor(LEFT_MOTOR, -20);
+        motor(RIGHT_MOTOR, 20);
+        sleep(0.25);
+        if(digital(14)) {
+            recent++;
+            break;
+        }
+    }
+}
+
+void reset() {
+    stop();
+    sleep(0.5);
+    fd(0);
+    fd(2);
+    sleep(0.5);
+    bk(2);
+    sleep(1.5);
+}
+
+void main () {
+    while(1) {
+        printf("Recent Right = %d\n", recent);
+        sleep(0.25);
+        forward();
+        if(digital(15)) {
+            stop();
+            sleep(0.5);
+            scanRight();
+            turnBack();
+        }  
+    }
+}
