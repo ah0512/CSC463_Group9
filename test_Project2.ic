@@ -61,6 +61,20 @@ void scanRight() {
     }
 }
 
+void turnRight() {
+    int x = 0;
+    printf("Right Turn!!\n");
+    while(x < 1) {
+        bk(2);
+        fd(0);
+        sleep(0.25);
+        stop();
+        sleep(0.1);
+        x++;
+    }
+    x = 0;
+}
+
 void main () {
     while(1) {
         printf("Recent Right = %d\n", recent);
