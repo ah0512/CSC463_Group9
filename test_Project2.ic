@@ -36,6 +36,26 @@ void right() {
     bk(RIGHT_MOTOR);
 }
 
+void forwardMotor(int power){
+    motor(RIGHT_MOTOR, power);
+    motor(LEFT_MOTOR, power);
+}
+
+void backwardMotor(int power){
+    motor(RIGHT_MOTOR, -power);
+    motor(LEFT_MOTOR, -power);
+}
+
+void turnLeftMotor(int power){
+    motor(RIGHT_POWER, power);
+    motor(LEFT_MOTOR, -power);
+}
+
+void turnRightMotor(int power){
+    motor(RIGHT_MOTOR, -power);
+    motor(LEFT_MOTOR, power);   
+}
+
 void turnBack() {
     printf("Front Bumper!!\n");
     /* Go Backwards */
