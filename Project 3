@@ -1,0 +1,39 @@
+/* 
+   Project 3 - Fuzzy Logic
+   Andrew Mueller & Austin Hamman
+   CSC 463 - Dr. Girard
+*/
+
+int LEFT_MOTOR = 0;
+int RIGHT_MOTOR = 2;
+int LEFT_SENSOR = 6;
+int RIGHT_SENSOR = 15;
+int time = 0;
+int LINE = 100;
+int turn = 0;
+
+void forward(){
+    fd(LEFT_MOTOR);
+    fd(RIGHT_MOTOR);
+}
+
+void stop(){
+    off(LEFT_MOTOR);
+    off(RIGHT_MOTOR);
+}
+
+int readSensors(){
+    int sensor = analog(LEFT_SENSOR) - analog(RIGHT_SENSOR);
+    return sensor;
+}
+
+
+
+void main() {
+    while(1){
+        forward();
+        
+    }
+      
+      
+}
