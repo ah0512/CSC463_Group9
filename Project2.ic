@@ -12,8 +12,8 @@ int recent = 0;
 int time = 0;
 
 void forward() {
-    fd(LEFT_MOTOR);
-    fd(RIGHT_MOTOR);
+    motor(0, 60);
+    motor(2,60);
 }
 
 void backward() {
@@ -57,31 +57,34 @@ void turnRightMotor(int power){
 }
 
 void turnBack() {
-    stop();
-    printf("Front Bumper!!\n");
-    /* Go Backwards */
-    bk(0);
-    bk(2);
+    int i;
+    backwardMotor(75);
     sleep(0.5);
-    /* Turn */
-    motor(LEFT_MOTOR, 75);
-    motor(RIGHT_MOTOR, -75);
-    sleep(2.0);
-    //recent++;
+    for(i = 0; i < 15; i++){
+       motor(0, 100);
+       sleep(0.1);
+    }
+    recent++;
 }
 
 void turnCheck() {
     printf("Check for Wall\n");
-    bk(0);
-    bk(2);
+    backwardMotor(75);
+    sleep(0.5);
     stop();
-    for(time = 0; time < 20; time++) {
-        fd(LEFT_MOTOR);
-        sleep(0.25);
+    for(time = 0; time < 18; time++) {
+        int i;
+        fd(RIGHT_MOTOR);
+        sleep(0.2);
         if(digital(RIGHT_TOUCH)) {
-               bk(LEFT_MOTOR);
-               sleep(2.0);
-               break;
+            printf("HI");
+            stop();
+            for(i = 0; i < 25; i++){
+                motor(LEFT_MOTOR, 100);
+                sleep(0.1);
+            }
+            stop(); 
+            break;
         }
     }   
 }
@@ -94,12 +97,24 @@ void main () {
         if(digital(RIGHT_TOUCH) && digital(LEFT_TOUCH)) {
             if(recent > 0) {
                 turnCheck();
-                recent = 0;
             } else {
                 turnBack();
-                recent = 1;
             }
             sleep(1.0);
+        }else if(digital(RIGHT_TOUCH)){
+            stop();
+            backwardMotor(60);
+            sleep(0.1);
+            stop();
+            motor(LEFT_MOTOR, 100);
+            sleep(0.25);
+        }else if(digital(LEFT_TOUCH)){
+            stop();
+            backwardMotor(60);
+            sleep(0.1);
+            stop();
+            motor(RIGHT_MOTOR, 100);
+            sleep(0.25);
         }
     }
 }
