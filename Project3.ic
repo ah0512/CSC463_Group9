@@ -8,6 +8,7 @@ int LEFT_MOTOR = 0;
 int RIGHT_MOTOR = 2;
 int LEFT_SENSOR = 6;
 int RIGHT_SENSOR = 15;
+int reading = 0;
 int time = 0;
 int LINE = 100;
 int turn = 0;
@@ -27,13 +28,15 @@ int readSensors(){
     return sensor;
 }
 
+int fuzzify(int x) {
 
+}
 
 void main() {
     while(1){
         forward();
+        reading = readSensors();
+        fuzzify(reading);
         
-    }
-      
-      
+    }  
 }
