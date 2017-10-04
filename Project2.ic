@@ -12,8 +12,8 @@ int recent = 0;
 int time = 0;
 
 void forward() {
-    motor(0, 60);
-    motor(2,60);
+    motor(0, 70);
+    motor(2,70);
 }
 
 void backward() {
@@ -59,10 +59,10 @@ void turnRightMotor(int power){
 void turnBack() {
     int i;
     backwardMotor(75);
-    sleep(0.5);
-    for(i = 0; i < 15; i++){
-       motor(0, 100);
-       sleep(0.1);
+    sleep(0.75);
+    for(i = 0; i < 20; i++){
+        motor(0, 100);
+        sleep(0.1);
     }
     recent++;
 }
@@ -70,18 +70,19 @@ void turnBack() {
 void turnCheck() {
     printf("Check for Wall\n");
     backwardMotor(75);
-    sleep(0.5);
+    sleep(0.25);
     stop();
     for(time = 0; time < 18; time++) {
         int i;
         fd(RIGHT_MOTOR);
         sleep(0.2);
-        if(digital(RIGHT_TOUCH)) {
-            printf("HI");
-            stop();
-            for(i = 0; i < 25; i++){
-                motor(LEFT_MOTOR, 100);
-                sleep(0.1);
+        if(digital(LEFT_TOUCH)) {
+            bk(0);
+            bk(2);
+            sleep(0.25);
+            for(i = 0; i < 14; i++){
+                fd(LEFT_MOTOR);
+                sleep(0.2);
             }
             stop(); 
             break;
@@ -100,21 +101,15 @@ void main () {
             } else {
                 turnBack();
             }
-            sleep(1.0);
         }else if(digital(RIGHT_TOUCH)){
             stop();
             backwardMotor(60);
-            sleep(0.1);
+            sleep(0.2);
             stop();
             motor(LEFT_MOTOR, 100);
-            sleep(0.25);
+            sleep(0.3);
         }else if(digital(LEFT_TOUCH)){
-            stop();
-            backwardMotor(60);
-            sleep(0.1);
-            stop();
-            motor(RIGHT_MOTOR, 100);
-            sleep(0.25);
+            turnCheck();
         }
     }
 }
