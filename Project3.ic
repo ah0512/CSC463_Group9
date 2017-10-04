@@ -13,17 +13,17 @@ int time = 0;
 int LINE = 100;
 int turn = 0;
 
-void forward(){
+void forward() {
     fd(LEFT_MOTOR);
     fd(RIGHT_MOTOR);
 }
 
-void stop(){
+void stop() {
     off(LEFT_MOTOR);
     off(RIGHT_MOTOR);
 }
 
-int readSensors(){
+int readSensors() {
     int sensor = analog(LEFT_SENSOR) - analog(RIGHT_SENSOR);
     return sensor;
 }
