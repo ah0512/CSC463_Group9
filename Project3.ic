@@ -7,36 +7,54 @@
 int LEFT_MOTOR = 0;
 int RIGHT_MOTOR = 2;
 int LEFT_SENSOR = 6;
-int RIGHT_SENSOR = 15;
-int reading = 0;
+int RIGHT_SENSOR = 15;  
 int time = 0;
 int LINE = 100;
 int turn = 0;
 
-void forward() {
+//FUZZY VALUES:
+int NB = 0;
+int NS = 0;
+int N = 0;
+int PS = 0;
+int PB = 0;
+
+void forward(){
     fd(LEFT_MOTOR);
     fd(RIGHT_MOTOR);
 }
 
-void stop() {
+void stop(){
     off(LEFT_MOTOR);
     off(RIGHT_MOTOR);
 }
 
-int readSensors() {
-    int sensor = analog(LEFT_SENSOR) - analog(RIGHT_SENSOR);
+int readSensors(){
+    int sensor = analog(RIGHT_SENSOR) - analog(LEFT_SENSOR);
     return sensor;
 }
 
-int fuzzify(int x) {
-
+int fuzzify(int sensor){
+    if(sensor <= NB && sensor > NS){
+        sensor = NB;
+    }else if(sensor <= NS && sensor > N){
+        sensor = NS;
+    }else if(sensor == N){
+        sensor = N;
+    }else if(sensor >= N && sensor < PB){
+        sensor = PS;
+    }else if(sensor >= PB){
+        sensor = PB;
+    }
 }
+
 
 void main() {
     while(1){
         forward();
-        reading = readSensors();
-        fuzzify(reading);
         
-    }  
+        
+    }
+      
+      
 }
