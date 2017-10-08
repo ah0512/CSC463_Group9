@@ -13,11 +13,15 @@ int LINE = 100;
 int turn = 0;
 
 //FUZZY VALUES:
-int NB = 0;
-int NS = 0;
-int N = 0;
-int PS = 0;
-int PB = 0;
+int NB = 0; //-75
+int NS = 0; //-25
+int N = 0;  //0
+int PS = 0; //25
+int PB = 0; //75
+
+//MOTOR FUZZY
+float rMotor;
+float lMotor;
 
 void forward(){
     fd(LEFT_MOTOR);
@@ -35,10 +39,11 @@ int readSensors(){
 }
 
 int fuzzify(int sensor){
-    if(sensor <= NB && sensor > NS){
-        sensor = NB;
-    }else if(sensor <= NS && sensor > N){
-        sensor = NS;
+    if(sensor <= NB && sensor < NS){
+        veryHigh = sensor/-NB;
+        lMotor = 1 - rMotor;
+    }else if(sensor >=NS && sensor > N){
+        
     }else if(sensor == N){
         sensor = N;
     }else if(sensor >= N && sensor < PB){
