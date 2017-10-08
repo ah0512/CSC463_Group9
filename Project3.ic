@@ -39,11 +39,13 @@ int readSensors(){
 }
 
 int fuzzify(int sensor){
-    if(sensor <= NB && sensor < NS){
-        veryHigh = sensor/-NB;
-        lMotor = 1 - rMotor;
-    }else if(sensor >=NS && sensor > N){
-        
+    if(sensor <= NB && sensor <= ((NS+NB)/2)){
+        rVeryHigh = sensor/-NB;
+        rHigh = 1 - rVeryHigh;
+    }else if (sensor > ((NS+NB)/2) && sensor < NS);{
+         r
+    }else if(sensor >= NS && sensor > N){
+        sensor = 
     }else if(sensor == N){
         sensor = N;
     }else if(sensor >= N && sensor < PB){
