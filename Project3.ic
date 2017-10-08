@@ -38,23 +38,62 @@ int readSensors(){
     return sensor;
 }
 
-int fuzzify(int sensor){
-    if(sensor <= NB && sensor <= ((NS+NB)/2)){
-        rVeryHigh = sensor/-NB;
-        rHigh = 1 - rVeryHigh;
+void fuzzify(int sensor){
+    if(sensor <= NB){
+         lVeryHigh = 1.0;
+         rVeryLow = 1.0;
+    }else if (sensor > NB && sensor <= ((NS+NB)/2)){
+        rVeryHigh = sensor/(PB+PS);
+        rHigh = 1.0 - rVeryHigh;
+        lHigh = sensor/(PB+PS);
+        lLow = 1.0 - lHigh;
     }else if (sensor > ((NS+NB)/2) && sensor < NS);{
-         r
+         rHigh = sensor/(PB+PS);
+         rVeryHigh = 1.0 - rHigh;
+         lLow = sensor/(PB+PS);
+         lVeryLow = 1.0 - lLow;
     }else if(sensor >= NS && sensor > N){
-        sensor = 
+         rHigh = 1.0;
+         lLow = 1.0;
     }else if(sensor == N){
-        sensor = N;
-    }else if(sensor >= N && sensor < PB){
-        sensor = PS;
+        rVeryHigh = 1.0;
+        lVeryHigh = 1.0;
+    }else if(sensor > N && sensor <= PS){
+        rLow = 1.0;
+        lHigh = 1.0;
+    }else if(sensor > PS && sensor < ((PB+PS)/2)){
+        lHigh = sensor/(PB+PS);
+        lVeryHigh = 1.0-lHigh;
+        rLow = sensor/(PB+PS);
+        rVeryLow = 1.0 - rLow;
+    }else if(sensor > ((PB+PS)/2)/2) && sensor < PB){
+        lVeryHigh = sensor/(PB+PS);
+        lHigh = 1.0 - lVeryHigh;
+        rVeryLow = sensor/(PB+PS);
+        rLow = 1.0 - rVeryLow;
     }else if(sensor >= PB){
-        sensor = PB;
+         rVeryHigh = 1.0;
+         lVeryLow = 1.0;
     }
 }
 
+void setMotorSpeed(){
+   lVeryLow *= VL;
+   lLow *= L;
+   lHigh *= H;
+   lVeryHigh *= VH;
+   
+   rVeryLow *= VH;
+   rLow *= L
+   rHigh *= H;
+   rVeryHigh *= VH;
+   
+   leftMotor = lVeryLow + lLow + lHigh + lVeryHigh;
+   rightMotor = rVeryLow + rLow + rHigh + rVeryHigh;
+   
+   motor(LEFT_MOTOR, leftMotor);
+   motor(RIGHT_MOTOR, rightMotor);
+}
 
 void main() {
     while(1){
