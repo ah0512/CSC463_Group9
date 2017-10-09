@@ -1,1 +1,132 @@
+/* 
+   Project 3 - Fuzzy Logic
+   Andrew Mueller & Austin Hamman
+   CSC 463 - Dr. Girard
+*/
+
+int LEFT_MOTOR = 0;
+int RIGHT_MOTOR = 2;
+int LEFT_SENSOR = 5;
+int RIGHT_SENSOR = 6;  
+
+//FUZZY VALUES:
+float NB = -60.0; //-60
+float NS = -30.0; //-30
+float NCZ = -10.0 //-10
+float PCZ = 10.0 // 10
+float PS = 30.0; //30
+float PB = 60.0; //60
+
+//MOTOR FUZZY INPUT
+float lVeryLow;
+float lLow;
+float lHigh;
+float lVeryHigh;
+
+float rVeryLow;
+float rLow;
+float rHigh;
+float rVeryHigh;
+
+//MOTOR MOD VALUE
+float VH = 100.0;
+float H = 75.0;
+float L = 50.0;
+float VL = 25.0;
+
+//MOTOR CRISP OUTPUT
+int rightMotor;
+int leftMotor;
+
+void forward(){
+    fd(LEFT_MOTOR);
+    fd(RIGHT_MOTOR);
+}
+
+void stop(){
+    off(LEFT_MOTOR);
+    off(RIGHT_MOTOR);
+}
+
+float readSensor(){
+    float sensor = (float)(analog(LEFT_SENSOR) - analog(RIGHT_SENSOR));
+    printf("sensor = %f\n", sensor);
+    sleep(1.0);
+    return sensor;
+}
+
+//Receive crisp sensor input and fuzzify it by setting all the fuzzy output values
+void fuzzify(float sensor){
+   lVeryLow = 0.0;
+   lLow = 0.0;
+   lHigh = 0.0;
+   lVeryHigh = 0.0;
+
+   rVeryLow = 0.0;
+   rLow = 0.0;
+   rHigh = 0.0;
+   rVeryHigh = 0.0;
+  
+    if(sensor <= NB) //-60 to - infinite
+      {
+         lVeryHigh = 1.0;
+         rVeryLow = 1.0;
+    }else if (sensor > NB && sensor < NS)//-60 t0 -30
+      {
+         lVeryHigh = 0.5;
+         rVeryLow = 0.5;
+      {
+    }else if(sensor >= NS && sensor < NCZ)//-30 to -10 
+      {
+         rHigh = 0.5;
+         lLow = 0.5;
+    }else if(sensor >= NCZ && sensor <= PCZ)// -10 to 10
+      {
+        leftmotor = 60;
+        rightmotor = 60;
+    }else if(sensor > PCZ && sensor <= PS)//10 to 30
+      {
+        rLow = 0.5;
+        lHigh = 0.5;
+    }else if(sensor > PS && sensor < PB))// 30 to 60
+      {
+         rVeryHigh = 0.5;
+         lVeryLow = 0.5;
+    }else if(sensor >= PB) // 60 to infinite
+      {
+         rVeryHigh = 1.0;
+         lVeryLow = 1.0;
+    }
+}
+
+//use fuzzy motor values and set to a crisp output
+//sets motor speed to the crisp outputs
+void setMotorSpeed(){
+   lVeryLow *= VL;
+   lLow *= L;
+   lHigh *= H;
+   lVeryHigh *= VH;
+   
+   rVeryLow *= VH;
+   rLow *= L;
+   rHigh *= H;
+   rVeryHigh *= VH;
+   
+   leftMotor = (int)(lVeryLow + lLow + lHigh + lVeryHigh);
+   rightMotor = (int)(rVeryLow + rLow + rHigh + rVeryHigh);
+    
+    printf("Left: %d, Right: %d\n", leftMotor, rightMotor);
+    sleep(0.5);
+    motor(LEFT_MOTOR, leftMotor);
+    motor(RIGHT_MOTOR, rightMotor);
+}
+
+void main() {
+    float count = 0.0;
+    while(1){
+        count = readSensor();
+        fuzzify(count);
+        setMotorSpeed();
+    }
+}
 
