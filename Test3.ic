@@ -66,6 +66,9 @@ void fuzzify(float sensor){
    rLow = 0.0;
    rHigh = 0.0;
    rVeryHigh = 0.0;
+    
+   leftMotor = 0;
+   rightMotor = 0;
   
     if(sensor <= NB) //-60 to - infinite
       {
@@ -111,9 +114,6 @@ void setMotorSpeed(){
    rLow *= L;
    rHigh *= H;
    rVeryHigh *= VH;
-   
-   leftMotor = 0;
-   rightMotor = 0;
    
    leftMotor = (int)(lVeryLow + lLow + lHigh + lVeryHigh);
    rightMotor = (int)(rVeryLow + rLow + rHigh + rVeryHigh);
