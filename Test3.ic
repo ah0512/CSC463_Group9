@@ -112,6 +112,9 @@ void setMotorSpeed(){
    rHigh *= H;
    rVeryHigh *= VH;
    
+   leftMotor = 0;
+   rightMotor = 0;
+   
    leftMotor = (int)(lVeryLow + lLow + lHigh + lVeryHigh);
    rightMotor = (int)(rVeryLow + rLow + rHigh + rVeryHigh);
     
