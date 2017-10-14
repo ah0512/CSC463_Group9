@@ -9,24 +9,27 @@ int LEFT_MOTOR = 0;
 int RIGHT_MOTOR = 2;
 int REFLECTIVE_SENSOR = 6;
 int LIGHT_SENSOR = 5;
+int time = 0;
+int wall = ?;
+int source = ?;
 
-void forwardMotor(int power) {    
+void forward(int power) {    
    motor(RIGHT_MOTOR, power);    
    motor(LEFT_MOTOR, power);
 }
 
-void backwardMotor(int power) {
+void backward(int power) {
    motor(RIGHT_MOTOR, -power);       
    motor(LEFT_MOTOR, -power);
 }
 
-void turnLeftMotor(int power) {
+void turnLeft(int power) {
    motor(RIGHT_MOTOR, power);    
-   motor(LEFT_MOTOR, -power);
+   motor(LEFT_MOTOR, 0);
 }
 
-void turnRightMotor(int power) {
-   motor(RIGHT_MOTOR, -power);    
+void turnRight(int power) {
+   motor(RIGHT_MOTOR, 0;    
    motor(LEFT_MOTOR, power);   
 }
 
@@ -36,5 +39,23 @@ void stop() {
 }
 
 void main() {
-
+      while(1) {
+         printf("Sensor: %d %d\n", REFLECTIVE_SENSOR, LIGHT_SENSOR);
+         forward(60);
+         sleep(0.1);
+         if(REFLECTIVE_SENSOR < wall) {
+            while(LIGHT_SENSOR > source) {
+               forward(80);
+            }
+            for( time = 0; time < 20; time++) {
+               turnRight(100);
+               sleep(0.1);
+               if(REFLECTIVE_SENSOR < wall) {
+                  turnLeft(100);
+                  sleep(0.35);
+                  break;
+               }
+            }
+         }
+      }
 }
