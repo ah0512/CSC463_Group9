@@ -7,8 +7,33 @@
 
 int LEFT_MOTOR = 0;
 int RIGHT_MOTOR = 2;
-int LEFT_SENSOR = 6;
-int RIGHT_SENSOR = 5;
+int REFLECTIVE_SENSOR = 6;
+int LIGHT_SENSOR = 5;
+
+void forwardMotor(int power) {    
+   motor(RIGHT_MOTOR, power);    
+   motor(LEFT_MOTOR, power);
+}
+
+void backwardMotor(int power) {
+   motor(RIGHT_MOTOR, -power);       
+   motor(LEFT_MOTOR, -power);
+}
+
+void turnLeftMotor(int power) {
+   motor(RIGHT_MOTOR, power);    
+   motor(LEFT_MOTOR, -power);
+}
+
+void turnRightMotor(int power) {
+   motor(RIGHT_MOTOR, -power);    
+   motor(LEFT_MOTOR, power);   
+}
+
+void stop() {
+   off(RIGHT_MOTOR);
+   off(LEFT_MOTOR);
+}
 
 void main() {
 
