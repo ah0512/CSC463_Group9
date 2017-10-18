@@ -1,4 +1,3 @@
-/* 
    Project 4 - Maze Following with Fusion
    Andrew Mueller & Austin Hamman
    CSC 463 - Dr. Girard
@@ -7,11 +6,12 @@
 
 int LEFT_MOTOR = 0;
 int RIGHT_MOTOR = 2;
-int REFLECTIVE_SENSOR = 6;
-int LIGHT_SENSOR = 5;
+int REFLECTIVE_RIGHT = 6;
+int REFLECTIVE_LEFT = 5;
+int LIGHT_SENSOR = 4;
 int time = 0;
-int wall = ?;
-int source = ?;
+int WALL = 225;
+int SOURCE = 30;
 
 void forward(int power) {    
    motor(RIGHT_MOTOR, power);    
@@ -29,7 +29,7 @@ void turnLeft(int power) {
 }
 
 void turnRight(int power) {
-   motor(RIGHT_MOTOR, 0;    
+   motor(RIGHT_MOTOR, 0);    
    motor(LEFT_MOTOR, power);   
 }
 
@@ -40,17 +40,19 @@ void stop() {
 
 void main() {
       while(1) {
-         printf("Sensor: %d %d\n", REFLECTIVE_SENSOR, LIGHT_SENSOR);
+         printf("Sensor: %d %d\n", REFLECTIVE_RIGHT, LIGHT_SENSOR);
          forward(60);
          sleep(0.1);
-         if(REFLECTIVE_SENSOR < wall) {
-            while(LIGHT_SENSOR > source) {
+         if((REFLECTIVE_RIGHT < WALL) && (REFLECTIVE_LEFT < WALL)) {
+            backward(70);
+            sleep(0.25);
+            while(LIGHT_SENSOR < SOURCE) {
                forward(80);
             }
             for( time = 0; time < 20; time++) {
                turnRight(100);
                sleep(0.1);
-               if(REFLECTIVE_SENSOR < wall) {
+               if(REFLECTIVE_RIGHT < WALL) {
                   turnLeft(100);
                   sleep(0.35);
                   break;
