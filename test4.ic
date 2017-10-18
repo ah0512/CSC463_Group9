@@ -1,5 +1,5 @@
-/*
-  Project 4 - Maze Following with Fusion
+/* 
+   Project 4 - Maze Following with Fusion
    Andrew Mueller & Austin Hamman
    CSC 463 - Dr. Girard
 */
@@ -7,8 +7,8 @@
 
 int LEFT_MOTOR = 0;
 int RIGHT_MOTOR = 2;
-int REFLECTIVE_RIGHT = 6;
-int REFLECTIVE_LEFT = 5;
+int REFLECTIVE_RIGHT = 5;
+int REFLECTIVE_LEFT = 6;
 int LIGHT_SENSOR = 4;
 int time = 0;
 int WALL = 225;
@@ -39,55 +39,23 @@ void stop() {
    off(LEFT_MOTOR);
 }
 
-int checkReflective(){
-  if(analog(REFLECTIVE_RIGHT) < WALL && analog(REFLECTIVE_LEFT) < WALL)
-    return 1;
-  else
-    return 0;
-}
-
-int checkWall(){
-  if(checkReflective() && analog(LIGHT_SENSOR) > SOURCE)
-    return 1; //wall
-  else
-    return 0; //light
-}
-
-/*
-void wall(){
-  if(checkWall()){
-    backward(70);
-    sleep(0.25);
-    for(time = 0; time < 20; time++){
-      turnRight(100);
-      sleep(0.1);
-      if(checkWall()){
-        turnLeft(100);
-        sleep(0.35)
-        break;
-      }
-    }
-  }
-}
-*/
-
 void main() {
       while(1) {
-         printf("Sensor: %d %d\n", REFLECTIVE_RIGHT, LIGHT_SENSOR);
+         printf("Sensor: %d %d\n", analog(REFLECTIVE_RIGHT), analog(REFLECTIVE_LEFT));
          forward(60);
          sleep(0.1);
-         if(checkWall()) {
-            backward(70);
-            sleep(0.25);
-            while(!checkWall()) {
+        if((analog(REFLECTIVE_RIGHT) < WALL) && (analog(REFLECTIVE_LEFT) < WALL)) {
+            backward(75);
+            sleep(0.35);
+            while(analog(LIGHT_SENSOR) < SOURCE) {
                forward(80);
             }
             for( time = 0; time < 20; time++) {
-               turnRight(100);
-               sleep(0.1);
-               if(checkWall()) {
-                  turnLeft(100);
-                  sleep(0.35);
+               turnLeft(90 );
+               sleep(0.2);
+               if(REFLECTIVE_RIGHT < WALL) {
+                  turnRight(90);
+                  sleep(2.0);
                   break;
                }
             }
