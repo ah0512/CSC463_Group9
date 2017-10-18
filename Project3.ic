@@ -68,31 +68,31 @@ void fuzzify(float sensor){
     rHigh = 0.0;
     rVeryHigh = 0.0;
     
-    if(sensor <= NB) //-60 to - infinite                   //if sensor reading is less than -60, set values to turn hard left
+    if(sensor <= NB) //-60 to - infinite                   //if sensor reading is less than -60, set values to turn hard right
       {
         lVeryHigh = 1.35;                                 
         rVeryLow = 1.35;
-    }else if (sensor > NB && sensor < NS)//-60 to -30      //if sensor reading is between
+    }else if (sensor > NB && sensor < NS)//-60 to -30      //if sensor reading is between -60 and -30, set values to turn right
       {
         lVeryHigh = 1.0;
         rVeryLow = 1.0;
-    }else if(sensor >= NS && sensor < NCZ)//-30 to -10 
+    }else if(sensor >= NS && sensor < NCZ)//-30 to -10    //if sensor reading is between -30 and -10, set values to turn soft left 
       {
         rHigh = 0.85;
         lLow = 0.85;
-    }else if(sensor >= NCZ && sensor <= PCZ)// -10 to 10
+    }else if(sensor >= NCZ && sensor <= PCZ)// -10 to 10 //if sensor reading is between -10 and 10, set values to go straight
       {
         rVeryHigh = 0.70;
         lVeryHigh = 0.70;
-    }else if(sensor > PCZ && sensor <= PS)//10 to 30
+    }else if(sensor > PCZ && sensor <= PS)//10 to 30    //if sensor reading is between 10 and 30, set values to turn soft right
       {
         rLow = 0.85;
         lHigh = 0.85;
-    }else if(sensor > PS && sensor < PB)// 30 to 60
+    }else if(sensor > PS && sensor < PB)// 30 to 60     //if sensor reading is between 30 and 60, set values to turnleft
       {
         rVeryHigh = 1.0;
         lVeryLow = 1.0;
-    }else if(sensor >= PB) // 60 to infinite
+    }else if(sensor >= PB) // 60 to infinite            //if sensor is 60 or greater, set values to turn hard left
       {
         rVeryHigh = 1.35;
         lVeryLow = 1.35;
@@ -102,23 +102,23 @@ void fuzzify(float sensor){
 //use fuzzy motor values and set to a crisp output
 //sets motor speed to the crisp outputs
 void setMotorSpeed(){
-    lVeryLow *= VL;
-    lLow *= L;
-    lHigh *= H;
-    lVeryHigh *= VH;
+    lVeryLow *= VL;                                         //multiply lVeryLow by 0
+    lLow *= L;                                              //multiply lLow by 25
+    lHigh *= H;                                             //multiply lHigh by 50
+    lVeryHigh *= VH;                                        //multiply lVeryHigh by 75
     
-    rVeryLow *= VL;
-    rLow *= L;
-    rHigh *= H;
-    rVeryHigh *= VH;
+    rVeryLow *= VL;                                         //multiply rVeryLow by 0
+    rLow *= L;                                              //multiply rLow by 25
+    rHigh *= H;                                             //multiply rHigh by 50
+    rVeryHigh *= VH;                                        //multiply rVeryHigh by 75
     
-    leftMotor = (int)(lVeryLow + lLow + lHigh + lVeryHigh);
-    rightMotor = (int)(rVeryLow + rLow + rHigh + rVeryHigh);
+    leftMotor = (int)(lVeryLow + lLow + lHigh + lVeryHigh);   //add values of all left values to get speed of left motor
+    rightMotor = (int)(rVeryLow + rLow + rHigh + rVeryHigh);  //add values of all right values to get speed of right motor
     
-    printf("Left: %d, Right: %d\n", leftMotor, rightMotor);
+    printf("Left: %d, Right: %d\n", leftMotor, rightMotor); 
     sleep(0.25);
-    motor(LEFT_MOTOR, leftMotor);
-    motor(RIGHT_MOTOR, rightMotor);
+    motor(LEFT_MOTOR, leftMotor);                             //set left motor to the leftMotor speed
+    motor(RIGHT_MOTOR, rightMotor);                           //set right motor to the rightMotor speed
 }
 
 void main() {
