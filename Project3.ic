@@ -48,11 +48,12 @@ void stop(){
     off(RIGHT_MOTOR);
 }
 
-float readSensor(){
-    float sensor = (float)(analog(LEFT_SENSOR) - analog(RIGHT_SENSOR));
+//read sensor by subtracting left sensor from right sensor
+float readSensor(){                  
+    float sensor = (float)(analog(LEFT_SENSOR) - analog(RIGHT_SENSOR));              //subtract left sensor from right sensor
     printf("sensor = %f\n", sensor);
     sleep(0.25);
-    return sensor;
+    return sensor;                                                                   //return sensor value
 }
 
 //Receive crisp sensor input and fuzzify it by setting all the fuzzy output values
@@ -67,11 +68,11 @@ void fuzzify(float sensor){
     rHigh = 0.0;
     rVeryHigh = 0.0;
     
-    if(sensor <= NB) //-60 to - infinite
+    if(sensor <= NB) //-60 to - infinite                   //if sensor reading is less than -60, set values to turn hard left
       {
-        lVeryHigh = 1.35;
+        lVeryHigh = 1.35;                                 
         rVeryLow = 1.35;
-    }else if (sensor > NB && sensor < NS)//-60 t0 -30
+    }else if (sensor > NB && sensor < NS)//-60 to -30      //if sensor reading is between
       {
         lVeryHigh = 1.0;
         rVeryLow = 1.0;
