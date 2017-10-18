@@ -4,6 +4,7 @@
    CSC 463 - Dr. Girard
 */
 
+//Handyboard Ports
 int LEFT_MOTOR = 0;
 int RIGHT_MOTOR = 2;
 int LEFT_SENSOR = 5;
@@ -38,11 +39,13 @@ float VL = 0.0;
 int rightMotor;
 int leftMotor;
 
+//Makes robot go forward
 void forward(){
     fd(LEFT_MOTOR);
     fd(RIGHT_MOTOR);
 }
 
+//Makes robot stop
 void stop(){
     off(LEFT_MOTOR);
     off(RIGHT_MOTOR);
