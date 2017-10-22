@@ -25,11 +25,11 @@ void backward(int power) {
 
 void turnLeft(int power) {
    motor(RIGHT_MOTOR, power);    
-   motor(LEFT_MOTOR, 0);
+   motor(LEFT_MOTOR, -power);
 }
 
 void turnRight(int power) {
-   motor(RIGHT_MOTOR, 0);    
+   motor(RIGHT_MOTOR, -power);    
    motor(LEFT_MOTOR, power);   
 }
 
@@ -50,10 +50,10 @@ void main() {
                forward(80);
             }
             for( time = 0; time < 20; time++) {
-               turnRight(100);
+               turnRight(80);
                sleep(0.1);
                if(REFLECTIVE_RIGHT < WALL) {
-                  turnLeft(100);
+                  turnLeft(80);
                   sleep(0.35);
                   break;
                }
