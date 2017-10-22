@@ -1,4 +1,4 @@
-   /* 
+/* 
    Project 4 - Maze Following with Fusion
    Andrew Mueller & Austin Hamman
    CSC 463 - Dr. Girard
@@ -42,7 +42,7 @@ void stop() {
 void checkWall() {
     printf("Check Wall\n");
     turnLeft(100);
-    sleep(0.35);
+    sleep(0.5);
     count++;
 }
 
@@ -51,7 +51,7 @@ void checkCorner() {
     for( time = 0; time < 20; time++) {
         turnLeft(100);
         sleep(0.1);
-        if(REFLECTIVE_RIGHT < WALL) {
+        if(analog(REFLECTIVE_RIGHT < WALL)) {
             turnRight(100);
             sleep(2.0);
             break;
@@ -67,7 +67,7 @@ void main() {
         if(analog(REFLECTIVE_LEFT) < WALL) {
             backward(55);
             sleep(0.5);
-            if(count = 0) {
+            if(count < 1) {
                 checkWall();
             }else{
                 checkCorner();
