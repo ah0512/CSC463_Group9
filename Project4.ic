@@ -1,15 +1,16 @@
+   /* 
    Project 4 - Maze Following with Fusion
    Andrew Mueller & Austin Hamman
    CSC 463 - Dr. Girard
 */
 
-
 int LEFT_MOTOR = 0;
 int RIGHT_MOTOR = 2;
-int REFLECTIVE_RIGHT = 6;
-int REFLECTIVE_LEFT = 5;
+int REFLECTIVE_RIGHT = 5;
+int REFLECTIVE_LEFT = 6;
 int LIGHT_SENSOR = 4;
 int time = 0;
+int count = 0;
 int WALL = 225;
 int SOURCE = 30;
 
@@ -25,11 +26,11 @@ void backward(int power) {
 
 void turnLeft(int power) {
    motor(RIGHT_MOTOR, power);    
-   motor(LEFT_MOTOR, -power);
+   motor(LEFT_MOTOR, 0);
 }
 
 void turnRight(int power) {
-   motor(RIGHT_MOTOR, -power);    
+   motor(RIGHT_MOTOR, 0);    
    motor(LEFT_MOTOR, power);   
 }
 
@@ -38,26 +39,43 @@ void stop() {
    off(LEFT_MOTOR);
 }
 
-void main() {
+void checkWall() {
+    printf("Check Wall\n");
+    turnLeft(100);
+    sleep(0.35);
+    count++;
+}
+
+void checkCorner() {
+    printf("Check Corner\n");
+    for( time = 0; time < 20; time++) {
+        turnLeft(100);
+        sleep(0.1);
+        if(REFLECTIVE_RIGHT < WALL) {
+            turnRight(100);
+            sleep(2.0);
+            break;
+        }
+    }
+}
+
+void main() { 
       while(1) {
-         printf("Sensor: %d %d\n", REFLECTIVE_RIGHT, LIGHT_SENSOR);
-         forward(60);
-         sleep(0.1);
-         if((REFLECTIVE_RIGHT < WALL) && (REFLECTIVE_LEFT < WALL)) {
-            backward(70);
-            sleep(0.25);
-            while(LIGHT_SENSOR < SOURCE) {
-               forward(80);
+        printf("Sensor: %d %d\n", analog(REFLECTIVE_LEFT), analog(LIGHT_SENSOR));
+        forward(60);
+        sleep(0.1);
+        if(analog(REFLECTIVE_LEFT) < WALL) {
+            backward(55);
+            sleep(0.5);
+            if(count = 0) {
+                checkWall();
+            }else{
+                checkCorner();
             }
-            for( time = 0; time < 20; time++) {
-               turnRight(80);
-               sleep(0.1);
-               if(REFLECTIVE_RIGHT < WALL) {
-                  turnLeft(80);
-                  sleep(0.35);
-                  break;
-               }
+        }
+        while(analog(LIGHT_SENSOR) < SOURCE) {
+               forward(70);
             }
-         }
       }
 }
+
