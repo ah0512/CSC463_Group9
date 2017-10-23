@@ -7,8 +7,9 @@
 int LEFT_MOTOR = 0;
 int RIGHT_MOTOR = 2;
 int REFLECTIVE_RIGHT = 5;
-int REFLECTIVE_LEFT = 6;
-int LIGHT_SENSOR = 4;
+int REFLECTIVE_FRONT = 6;
+int LIGHT_FRONT = 4;
+int LIGHT_LEFT = 3;
 int time = 0;
 int count = 0;
 int WALL = 225;
@@ -49,22 +50,33 @@ void checkWall() {
 void checkCorner() {
     printf("Check Corner\n");
     for( time = 0; time < 20; time++) {
-        turnLeft(100);
+        turnRight(100);
         sleep(0.1);
         if(analog(REFLECTIVE_RIGHT < WALL)) {
-            turnRight(100);
+            turnLeft(100);
             sleep(2.0);
             break;
         }
     }
 }
 
+void checkLight() {
+   printf("Check Light\n");
+   while(analog(LIGHT_LEFT) < SOURCE) {
+         turnLeft(100);
+         if(analog(LIGHT_FRONT) < SOURCE) {
+            forward(80);
+            sleep(5.0);
+         }
+   }
+}
+
 void main() { 
       while(1) {
-        printf("Sensor: %d %d\n", analog(REFLECTIVE_LEFT), analog(LIGHT_SENSOR));
+        printf("Sensor: %d %d\n", analog(REFLECTIVE_FRONT), analog(LIGHT_LEFT));
         forward(60);
         sleep(0.1);
-        if(analog(REFLECTIVE_LEFT) < WALL) {
+        if(analog(REFLECTIVE_FRONT) < WALL) {
             backward(55);
             sleep(0.5);
             if(count < 1) {
@@ -72,10 +84,7 @@ void main() {
             }else{
                 checkCorner();
             }
-        }
-        while(analog(LIGHT_SENSOR) < SOURCE) {
-               forward(70);
-            }
+       checkLight();
       }
 }
 
