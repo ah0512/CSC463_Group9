@@ -76,7 +76,7 @@ void main() {
         printf("Sensor: %d %d\n", analog(REFLECTIVE_FRONT), analog(LIGHT_LEFT));
         forward(60);
         sleep(0.1);
-        if(analog(REFLECTIVE_FRONT) < WALL) {
+        if((analog(REFLECTIVE_FRONT) < WALL)) && (analog(LIGHT_FRONT) > SOURCE)) {
             backward(55);
             sleep(0.5);
             if(count < 1) {
