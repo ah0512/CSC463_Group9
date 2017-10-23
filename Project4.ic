@@ -4,16 +4,16 @@
    CSC 463 - Dr. Girard
 */
 
-int LEFT_MOTOR = 0;
-int RIGHT_MOTOR = 2;
-int REFLECTIVE_RIGHT = 5;
-int REFLECTIVE_FRONT = 6;
-int LIGHT_FRONT = 4;
-int LIGHT_LEFT = 3;
-int time = 0;
-int count = 0;
-int WALL = 225;
-int SOURCE = 30;
+int LEFT_MOTOR = 0; //Left Motor port
+int RIGHT_MOTOR = 2; //Right Motor port
+int REFLECTIVE_RIGHT = 5; //Right Reflective port
+int REFLECTIVE_FRONT = 6; //Front Reflective port
+int LIGHT_FRONT = 4; //Front Light port
+int LIGHT_LEFT = 3; //Left Light port
+int time = 0; //time interval
+int count = 0; //count interval
+int WALL = 225; //value for when the reflective-opto senses a wall
+int SOURCE = 30; //value for when the light sensor senses a light source
 
 void forward(int power) {    
    motor(RIGHT_MOTOR, power);    
@@ -40,6 +40,7 @@ void stop() {
    off(LEFT_MOTOR);
 }
 
+// This function checks to see the first wall and turns left when it sees it
 void checkWall() {
     printf("Check Wall\n");
     turnLeft(100);
@@ -47,12 +48,16 @@ void checkWall() {
     count++;
 }
 
+// This function checks to see if the robot is in a corner by turning right and
+// getting a sensor reading from the right reflective-opto and then if it is in 
+// a corner it makes a 45 degree turn out of the corner
 void checkCorner() {
     printf("Check Corner\n");
     for( time = 0; time < 20; time++) {
         turnRight(100);
         sleep(0.1);
-        if(analog(REFLECTIVE_RIGHT < WALL)) {
+        //The next if statement uses the sensor fusion to check to see if there is a wall but not a light source
+        if(analog(REFLECTIVE_RIGHT) < WALL) && analog(LIGHT_LEFT) > SOURCE)) {
             turnLeft(100);
             sleep(2.0);
             break;
@@ -60,11 +65,16 @@ void checkCorner() {
     }
 }
 
+// This function will check the left sensor to see if it sees a light sources and 
+// then turns left until the front sense seeing the light source and then the robot 
+// will go forward
 void checkLight() {
    printf("Check Light\n");
    while(analog(LIGHT_LEFT) < SOURCE) {
          turnLeft(100);
-         if(analog(LIGHT_FRONT) < SOURCE) {
+         // This while loop checks to see if there is light source but uses sensor fusion to also sense a wall
+         // because the light source is making the reflective-opto see a wall
+         if(analog(LIGHT_FRONT) < SOURCE) && (analog(REFLECTIVE_FRONT) < WALL)) {
             forward(80);
             sleep(5.0);
          }
@@ -76,7 +86,8 @@ void main() {
         printf("Sensor: %d %d\n", analog(REFLECTIVE_FRONT), analog(LIGHT_LEFT));
         forward(60);
         sleep(0.1);
-        if((analog(REFLECTIVE_FRONT) < WALL)) && (analog(LIGHT_FRONT) > SOURCE)) {
+        //The next if statement uses the sensor fusion to check to see if there is a wall but not a light source
+        if((analog(REFLECTIVE_FRONT) < WALL) && (analog(LIGHT_FRONT) > SOURCE)) {
             backward(55);
             sleep(0.5);
             if(count < 1) {
