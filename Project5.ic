@@ -1,0 +1,72 @@
+/* 
+   Project 5 - Maze Following with Sersa
+   Andrew Mueller & Austin Hamman
+   CSC 463 - Dr. Girard
+*/
+
+int LEFT_MOTOR = 0; //Left Motor port
+int RIGHT_MOTOR = 2; //Right Motor port
+int leftTouch = 14;  //Left Touch sensor port
+int rightTouch = 15; // Right touch sensor port
+int frontTouch = 7;  // Front touch sensor port
+int backTouch = 8;   // Back touch sensor port
+
+void forward(int power) {    
+   motor(RIGHT_MOTOR, power);    
+   motor(LEFT_MOTOR, power);
+}
+
+void backward(int power) {
+   motor(RIGHT_MOTOR, -power);       
+   motor(LEFT_MOTOR, -power);
+}
+
+void turnLeft(int power) {
+   motor(RIGHT_MOTOR, power);    
+   motor(LEFT_MOTOR, -power);
+}
+
+void turnRight(int power) {
+   motor(RIGHT_MOTOR, -power);    
+   motor(LEFT_MOTOR, power);   
+}
+
+void stop() {
+   off(RIGHT_MOTOR);
+   off(LEFT_MOTOR);
+}
+
+void actionMoveBack(){
+  backward(50);
+  sleep(0.50);
+}
+
+void actionTurnRight(){
+  turnRight(80);
+  sleep(0.5);
+}
+
+void actionTurnLeft(){
+  turnLeft(80);
+  sleep(0.5);
+}
+
+void actionMoveForward(){
+  forward(60);
+  sleep(0.1);
+}
+
+void actionTurnHardRight(){
+  turnRight(80);
+  sleep(2.0);
+}
+
+void actionTurnHardLeft(){
+  turnLeft(80);
+  sleep(2.0);
+}
+
+void main()
+{
+
+}
