@@ -1,1 +1,107 @@
+/* 
+   Project 5 - Maze Following with Sersa
+   Andrew Mueller & Austin Hamman
+   CSC 463 - Dr. Girard
+*/
 
+int LEFT_MOTOR = 0; //Left Motor port
+int RIGHT_MOTOR = 2; //Right Motor port
+int leftTouch = 14;  //Left Touch sensor port
+int rightTouch = 15; // Right touch sensor port
+int frontTouch = 7;  // Front touch sensor port
+int backTouch = 8;   // Back touch sensor port
+
+void forward(int power) {    
+   motor(RIGHT_MOTOR, power);    
+   motor(LEFT_MOTOR, power);
+}
+
+void backward(int power) {
+   motor(RIGHT_MOTOR, -power);       
+   motor(LEFT_MOTOR, -power);
+}
+
+void turnLeft(int power) {
+   motor(RIGHT_MOTOR, power);    
+   motor(LEFT_MOTOR, -power);
+}
+
+void turnRight(int power) {
+   motor(RIGHT_MOTOR, -power);    
+   motor(LEFT_MOTOR, power);   
+}
+
+void stop() {
+   off(RIGHT_MOTOR);
+   off(LEFT_MOTOR);
+}
+
+void actionMoveBack(){
+  backward(50);
+  sleep(0.50);
+}
+
+void actionTurnRight(){
+  turnRight(80);
+  sleep(0.5);
+}
+
+void actionTurnLeft(){
+  turnLeft(80);
+  sleep(0.5);
+}
+
+void actionMoveForward(){
+  forward(60);
+  sleep(0.1);
+}
+
+void actionTurnHardRight(){
+  turnRight(80);
+  sleep(2.0);
+}
+
+void actionTurnHardLeft(){
+  turnLeft(80);
+  sleep(2.0);
+}
+
+float frontBack = 1.0;
+float frontHardLeft = 1.0;
+float frontHardRight = 1.0;
+float frontRight = 1.0;
+float frontLeft = 1.0;
+
+int frontState(){
+  int []frontActions = {frontBack, frontHardLeft, frontHardRight, frontRight, frontLeft}
+  int action = 0;
+  for(int i = 0; frontActions[i] >= 4; i++)
+  {
+    if (frontActions[i] >= reward){
+      reward = frontActions[i];
+      action = i;
+    }
+  }
+  
+  return action;
+}
+
+void backState(){
+
+}
+
+void rightState(){
+
+}
+
+void leftState(){
+
+}
+
+void exploreState(){
+
+}
+
+void main() {
+  actions[]
+}
