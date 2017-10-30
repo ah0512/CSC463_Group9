@@ -11,9 +11,14 @@ int rightTouch = 15; // Right touch sensor port
 int frontTouch = 7;  // Front touch sensor port
 int backTouch = 8;   // Back touch sensor port
 
+int rightMotorPower;
+int leftMotorPower;
+
 void forward(int power) {    
    motor(RIGHT_MOTOR, power);    
    motor(LEFT_MOTOR, power);
+   rightMotorPower = power;
+   leftMotorPower = power;
 }
 
 void backward(int power) {
@@ -24,16 +29,22 @@ void backward(int power) {
 void turnLeft(int power) {
    motor(RIGHT_MOTOR, power);    
    motor(LEFT_MOTOR, -power);
+   rightMotorPower = power;
+   leftMotorPower = -power;
 }
 
 void turnRight(int power) {
    motor(RIGHT_MOTOR, -power);    
-   motor(LEFT_MOTOR, power);   
+   motor(LEFT_MOTOR, power);
+   rightMotorPower = -power;
+   leftMotorPower = power;
 }
 
 void stop() {
    off(RIGHT_MOTOR);
    off(LEFT_MOTOR);
+   rightMotorPower = 0;
+   leftMotorPower = 0;
 }
 
 void actionMoveBack(){
@@ -74,9 +85,10 @@ float turnLeft = 0.0;
 float turnHardRight = 0.0;
 float turnHardLeft = 0.0;
 
-void chooseAction()
+float actionArray[] = {moveForward, moveBack, turnRight, turnLeft, turnHardRight, turnHardLeft};
+
+int chooseAction()
 {
-   int actionArray[] = {moveForward, moveBack, turnRight, turnLeft, turnHardRight, turnHardLeft};
    int action = 0;
    float reward = 0.0;
    for(int i = 0; actionArray[i] < actionArray.length; i++){
@@ -86,6 +98,10 @@ void chooseAction()
       }
    }
    
+   return action
+}
+
+void runAction(int action){
    if (action == 0)
       actionMoveForward();
    if (action == 1)
@@ -98,9 +114,56 @@ void chooseAction()
       actionTurnHardRight();
    if (action == 5)
       actionTurnHardLeft();
-      
-   
-   //return action
+}
+
+int rewardForward(){
+   if ((rightMotorPower == leftMotorPower) && (rightMotorPower != 0))
+      return 1;
+   else
+      return 0;
+}
+
+int rewardStopped(){
+   if (rightMotorPower == 0 && leftMotorPower == 0)
+      return 1;
+   else
+      return 0;
+}
+
+int rewardHitWall(){
+   if (digital(frontTouch)){
+      return 1;
+   }else if (digital(backTouch)){
+      return 1;
+   }else if(digital(leftTouch)){
+      return 1;
+   }else if (digital(rightTouch)){
+      return 1;
+   }else
+      return 0;
+}
+
+int rewardTurning(){
+   if(rightMotorPower != leftMotorPower)
+      return 1;
+   else 
+      return 0;
+}
+
+void reward(int action){
+   float reward; 
+   if(rewardForward()){
+      reward = 0.1;
+   }else if(rewardStopped()){
+      reward = -0.1;
+   }else if(rewardHitWall()){
+      reward = -1;
+   }else if(rewardTurning()){
+      reward = -0.0001;
+   }else(!rewardHitWall()){
+      reward = 1;
+   }
+   actionArray[i] += reward;
 }
 
 void main()
