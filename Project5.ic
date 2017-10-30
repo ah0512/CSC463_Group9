@@ -66,6 +66,43 @@ void actionTurnHardLeft(){
   sleep(2.0);
 }
 
+//action values
+float moveForward = 0.0;
+float moveBack = 0.0;
+float turnRight = 0.0;
+float turnLeft = 0.0;
+float turnHardRight = 0.0;
+float turnHardLeft = 0.0;
+
+void chooseAction()
+{
+   int actionArray[] = {moveForward, moveBack, turnRight, turnLeft, turnHardRight, turnHardLeft};
+   int action = 0;
+   float reward = 0.0;
+   for(int i = 0; actionArray[i] < actionArray.length; i++){
+      if (actionArray[i] >= reward){
+         reward = actionArray[i];
+         action = i;
+      }
+   }
+   
+   if (action == 0)
+      actionMoveForward();
+   if (action == 1)
+      actionMoveBack();
+   if (action == 2)
+      actionTurnRight();
+   if (action == 3)
+      actionTurnLeft();
+   if (action == 4)
+      actionTurnHardRight();
+   if (action == 5)
+      actionTurnHardLeft();
+      
+   
+   //return action
+}
+
 void main()
 {
 
