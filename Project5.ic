@@ -168,5 +168,10 @@ void reward(int action){
 
 void main()
 {
-
+   int action;
+   while(1){
+      action = chooseAction();
+      runAction(action);
+      reward(action);
+   }   
 }
