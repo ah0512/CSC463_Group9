@@ -11,48 +11,48 @@ int rightTouch = 15; // Right touch sensor port
 int frontTouch = 7;  // Front touch sensor port
 int backTouch = 8;   // Back touch sensor port
 
-int rightMotorPower;
-int leftMotorPower;
+int rightMotorPower;    //power level of right motor
+int leftMotorPower;     //power level of left motor
 
-void forward(int power) {    
-   motor(RIGHT_MOTOR, power);    
-   motor(LEFT_MOTOR, power);
-   rightMotorPower = power;
-   leftMotorPower = power;
+void forward(int power) {     //move robot forward
+   motor(RIGHT_MOTOR, power); //set right motor to power
+   motor(LEFT_MOTOR, power);  //set left motor to power
+   rightMotorPower = power;   //save power level of right motor
+   leftMotorPower = power;    //save power level of left motor
 }
 
-void backward(int power) {
-   motor(RIGHT_MOTOR, -power);       
-   motor(LEFT_MOTOR, -power);
+void backward(int power) {     //move robot backward
+   motor(RIGHT_MOTOR, -power); //set right motor to -power      
+   motor(LEFT_MOTOR, -power);  //set left motor to -power
 }
 
-void turnLeft(int power) {
+void turnLeft(int power) {     //make robot turn left
    motor(RIGHT_MOTOR, power);    
    motor(LEFT_MOTOR, -power);
    rightMotorPower = power;
    leftMotorPower = -power;
 }
 
-void turnRight(int power) {
+void turnRight(int power) {     //make robot turn right
    motor(RIGHT_MOTOR, -power);    
    motor(LEFT_MOTOR, power);
    rightMotorPower = -power;
    leftMotorPower = power;
 }
 
-void stop() {
+void stop() {                  //stop robot
    off(RIGHT_MOTOR);
    off(LEFT_MOTOR);
    rightMotorPower = 0;
    leftMotorPower = 0;
 }
 
-void actionMoveBack(){
+void actionMoveBack(){        //robot moves back
   backward(50);
   sleep(0.50);
 }
 
-void actionTurnRight(){
+void actionTurnRight(){       //robot turns right
   turnRight(80);
   sleep(0.5);
 }
