@@ -163,7 +163,7 @@ void reward(int action){
    }else(!rewardHitWall()){
       reward = 1;
    }
-   actionArray[i] += reward;
+   actionArray[action] += reward;
 }
 
 void main()
