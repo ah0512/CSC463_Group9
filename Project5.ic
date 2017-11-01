@@ -77,17 +77,15 @@ void actionTurnHardLeft(){
   sleep(2.0);
 }
 
+float actionArray[] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0};//moveBack, moveRight, moveLeft, moveHardRight, moveHardLeft};
+
 //action values
-
-float moveBack = 0.0;
-float moveRight = 0.0;
-float moveLeft = 0.0;
-float moveHardRight = 0.0;
-float moveHardLeft = 0.0;
-
-float actionArray[] = {0.0};//moveBack, moveRight, moveLeft, moveHardRight, moveHardLeft};
-
 float moveForward = actionArray[0];
+float moveBack = actionArray[1];
+float moveRight = actionArray[2];
+float moveLeft = actionArray[3];
+float moveHardRight = actionArray[4];
+float moveHardLeft = actionArray[5];
 
 int chooseAction()
 {
