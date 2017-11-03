@@ -123,6 +123,8 @@ void runAction(int action){
       actionTurnHardRight();
    if (action == 5)
       actionTurnHardLeft();
+   if (action == 6)
+      actionStop();
 }
 
 int rewardForward(){
