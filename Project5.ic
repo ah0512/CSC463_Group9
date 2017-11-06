@@ -18,70 +18,80 @@ void forward(int power) {     //move robot forward
    motor(RIGHT_MOTOR, power); //set right motor to power
    motor(LEFT_MOTOR, power);  //set left motor to power
    rightMotorPower = power;   //save power level of right motor
-   leftMotorPower = power;    //save power level of left motor
+    leftMotorPower = power;    //save power level of left motor
+    //printf("Power: %d\n", power);
+    //sleep(0.5);
 }
 
 void backward(int power) {     //move robot backward
    motor(RIGHT_MOTOR, -power); //set right motor to -power      
    motor(LEFT_MOTOR, -power);  //set left motor to -power
    rightMotorPower = -power;
-   leftMotorPower = -power;
+    leftMotorPower = -power;
+   // printf("Power Back: %d\n", power);
+    //sleep(0.5);
 }
 
 void turnLeft(int power) {     //make robot turn left
    motor(RIGHT_MOTOR, power);    
    motor(LEFT_MOTOR, -power);
    rightMotorPower = power;
-   leftMotorPower = -power;
+    leftMotorPower = -power;
+   // printf("Left\n");
+    //sleep(0.5);
 }
 
 void turnRight(int power) {     //make robot turn right
    motor(RIGHT_MOTOR, -power);    
    motor(LEFT_MOTOR, power);
    rightMotorPower = -power;
-   leftMotorPower = power;
+    leftMotorPower = power;
+   // printf("Right\n");
+   // sleep(0.5);
 }
 
 void stop() {                  //stop robot
    off(RIGHT_MOTOR);
    off(LEFT_MOTOR);
    rightMotorPower = 0;
-   leftMotorPower = 0;
+    leftMotorPower = 0;
+    //printf("Stop\n");
+   // sleep(0.5);
 }
 
 void actionMoveBack(){        //robot moves back
-  backward(20);
+  backward(50);
   sleep(0.50);
 }
 
 void actionTurnRight(){       //robot turns right
   turnRight(80);
-  sleep(0.5);
+  sleep(1.0);
 }
 
 void actionTurnLeft(){
   turnLeft(80);
-  sleep(0.5);
+  sleep(1.0);
 }
 
 void actionMoveForward(){
-  forward(20);
+  forward(60);
   sleep(0.1);
 }
 
 void actionTurnHardRight(){
-  turnRight(80);
-  sleep(2.0);
+  turnRight(85);
+  sleep(2.5);
 }
 
 void actionTurnHardLeft(){
-  turnLeft(80);
-  sleep(2.0);
+  turnLeft(85);
+  sleep(2.5);
 }
 
 void actionStop(){
     stop();
-    sleep(0.2);
+    sleep(0.5);
 }
 
 float actionArray[] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
@@ -98,7 +108,7 @@ float moveStop = actionArray[6];
 int chooseAction()
 {
    int action = 0;
-   float reward = 0.0;
+   float reward = -9999.0;
    int i;
    for(i = 0; i < 7; i++){
       if (actionArray[i] >= reward){
@@ -128,7 +138,7 @@ void runAction(int action){
 }
 
 int rewardForward(){
-   if ((rightMotorPower == leftMotorPower) && (rightMotorPower != 0))
+   if ((rightMotorPower == leftMotorPower) && (rightMotorPower > 0))
       return 1;
    else
       return 0;
@@ -163,21 +173,29 @@ int rewardTurning(){
 
 //reward table
 void reward(int action){
-   float reward; 
+    float reward = 0.0; 
+    //float totalReward;
    if(rewardForward()){
-      reward = 0.1;
-   }else if(rewardStopped()){
-      reward = -0.1;
-   }else if(rewardHitWall()){
-      reward = -1.0;
-   }else if(rewardTurning()){
-      reward = -0.01;
-   }else if(!rewardHitWall()){
-      reward = 0.1;
+      reward += 0.35;
     }
-    
+    if(rewardStopped()){
+      reward += -0.1;
+    }
+    if(rewardStopped()){
+      reward += -0.1;
+    }else if (!rewardHitWall()){
+      reward += 0.15;
+    }
+    if(rewardTurning()){
+      reward += -0.25;
+    }
+    if(rewardHitWall()){
+      reward += -1.0;
+    }
+
     actionArray[action] += reward;
     printf("%d: %f\n", action, actionArray[action]);
+    sleep(0.2);
 }
 
 void main()
