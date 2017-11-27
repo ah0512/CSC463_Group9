@@ -1,0 +1,122 @@
+
+
+/* 
+   Final Project
+   Andrew Mueller & Austin Hamman
+   CSC 463 - Dr. Girard
+*/
+
+//Handyboard Ports
+int LEFT_MOTOR = 0;
+int RIGHT_MOTOR = 2;
+int ARM_MOTOR = 3;
+int REFLECTIVE_FRONTR = 5; //Front-Right Reflective port
+int REFLECTIVE_FRONTL = 6; //Front-Left Reflective port
+int LIGHT_RIGHT = 4; //RightLight port
+int LIGHT_LEFT = 3; //Left Light port
+int ELEVATION = 2;
+
+#define EAST 1
+#define SOUTH 2
+#define WEST 3
+#define NORTH 4
+
+int direction = EAST;
+int block = 0;
+int[20][2] dirArray;
+int dirCount = 0;
+
+
+void forward(int power) {    
+   motor(RIGHT_MOTOR, power);    
+   motor(LEFT_MOTOR, power);
+}
+
+void backward(int power) {
+   motor(RIGHT_MOTOR, -power);       
+   motor(LEFT_MOTOR, -power);
+}
+
+void turnLeft(int power) {
+   motor(RIGHT_MOTOR, power);    
+   motor(LEFT_MOTOR, -power);
+}
+
+void turnRight(int power) {
+   
+   motor(RIGHT_MOTOR, -power);    
+   motor(LEFT_MOTOR, power);
+   
+}
+
+void turnAround(){ //do a 180 turn
+   motor(RIGHT_MOTOR, 80);
+   motor(LEFT_MOTOR, -80);
+   sleep(5.0);
+   if (direction < 3)
+      direction += 2;
+   else
+      direction = (direction + 2) % 4;
+}
+
+turn90Degrees(){
+  turnRight(80);
+  sleep(2.0);
+}
+
+void stop() {
+   off(RIGHT_MOTOR);
+   off(LEFT_MOTOR);
+}
+
+void checkPath() {
+    if((analog(REFLECTIVE_FRONTR) < LINE) && (analog(REFLECTIVE_FRONTL) < LINE)) {
+        stop();
+        dirArray[dirCount][2] = analog(ELEVATION); //save elevation of intersection
+        dirArray[dirCount][0] = direction;        //saving original direction 
+        if (direction < 4){
+          direction++;
+        }   
+        else{
+          direction = (direction + 1) % 4;
+        }
+        dirArray[dirCount][1] = direction;
+        dirCount++;
+        sleep(1.0);
+        turn90Degrees();
+        while(analog(LIGHT_SENSOR) > SOURCE) {
+          checkLine();
+          if(digital(TOUCH_SENSOR) && block){
+            grabBlock();
+            block = 1;
+          }
+        }
+    }
+}
+
+void checkLine(){
+   if((analog(REFLECTIVE_FRONTR) < LINE) || (analog(REFLECTIVE_FRONTL) < LINE)){
+      forward(50);
+   }
+   else{
+      turnAround();
+   }  
+}
+
+void checkBlock(){
+  while(analog(LIGHT_SENSOR) > SOURCE) {
+      checkLine();
+      if(digital(TOUCH_SENSOR) && block){
+      grabBlock();
+      block = 1;
+   }
+}
+
+void main() { 
+    while(1) {
+        checkLine();
+        sleep(0.25);
+        checkPath();
+        
+    }
+}
