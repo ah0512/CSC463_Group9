@@ -34,6 +34,12 @@ void turnRight(int power) {
    motor(LEFT_MOTOR, power);   
 }
 
+void turnAround(){ //do a 180 turn
+   motor(RIGHT_MOTOR, 80);
+   motor(LEFT_MOTOR, -80);
+   sleep(5.0);
+}
+
 void stop() {
    off(RIGHT_MOTOR);
    off(LEFT_MOTOR);
@@ -43,8 +49,12 @@ void checkPath() {
     if((analog(REFLECTIVE_FRONTR) < LINE) && (analog(REFLECTIVE_FRONTL) < LINE)) {
         stop();
         sleep(1.0)
-        if((analog(LIGHT_RIGHT) > SOURCE) || (analog(LIGHT_RIGHT) > SOURCE)) {
-         
+        if((analog(LIGHT_RIGHT) > SOURCE)) {
+         turnRight(80);
+         sleep(2.0);
+        }else if((analog(LIGHT_LEFT > SOURCE)){
+         turnLeft(80);
+         sleep(2.0);
         }
     }
 }
