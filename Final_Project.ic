@@ -14,6 +14,8 @@ int LIGHT_RIGHT = 4; //RightLight port
 int LIGHT_LEFT = 3; //Left Light port
 int ELEVATION = 2;
 
+int block = 0;
+
 void forward(int power) {    
    motor(RIGHT_MOTOR, power);    
    motor(LEFT_MOTOR, power);
@@ -49,14 +51,55 @@ void checkPath() {
     if((analog(REFLECTIVE_FRONTR) < LINE) && (analog(REFLECTIVE_FRONTL) < LINE)) {
         stop();
         sleep(1.0)
-        if((analog(LIGHT_RIGHT) > SOURCE)) {
-         turnRight(80);
-         sleep(2.0);
-        }else if((analog(LIGHT_LEFT > SOURCE)){
-         turnLeft(80);
-         sleep(2.0);
+        if((analog(LIGHT_RIGHT) > SOURCE) && !block) {
+         turn90DegreesRight();
+        }else if((analog(LIGHT_LEFT > SOURCE && !block)){
+         turn90DegreesLeft();
+        }else{
+         forward(50);
+         sleep(0.5);
         }
     }
+}
+
+void checkBlock(){
+  while(analog(LIGHT_SENSOR) > SOURCE) {
+      checkLine();
+      if(digital(TOUCH_SENSOR) && !block){
+          grabBlock();
+          block = 1;
+      }
+   }
+}
+
+grabBlock(){
+   
+}
+
+void checkLine(){
+   if((analog(REFLECTIVE_FRONTR) < LINE) || (analog(REFLECTIVE_FRONTL) < LINE)){
+      forward(50);
+   }
+   else{
+      turnAround();
+   }  
+}
+
+void turnAround(){ //do a 180 turn
+   motor(RIGHT_MOTOR, 80);
+   motor(LEFT_MOTOR, -80);
+   sleep(5.0);
+}
+
+turn90DegreesRight(){
+  turnRight(80);
+  sleep(2.0);
+}
+
+
+turn90DegreesLeft(){
+  turnLeft(80);
+  sleep(2.0);
 }
 
 void main() { 
@@ -64,6 +107,5 @@ void main() {
         forward(50);
         sleep(0.25);
         checkPath();
-        
     }
 }
