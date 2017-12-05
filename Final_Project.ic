@@ -15,6 +15,7 @@ int LIGHT_LEFT = 3; //Left Light port
 int ELEVATION = 2;
 
 int block = 0;
+int blockCount = 0;
 
 void forward(int power) {    
    motor(RIGHT_MOTOR, power);    
@@ -73,7 +74,7 @@ void checkBlock(){
 }
 
 grabBlock(){
-   
+  
 }
 
 void checkLine(){
@@ -86,6 +87,8 @@ void checkLine(){
 }
 
 void turnAround(){ //do a 180 turn
+   backward(50);
+   sleep(0.1);
    motor(RIGHT_MOTOR, 80);
    motor(LEFT_MOTOR, -80);
    sleep(5.0);
@@ -96,7 +99,6 @@ turn90DegreesRight(){
   sleep(2.0);
 }
 
-
 turn90DegreesLeft(){
   turnLeft(80);
   sleep(2.0);
@@ -104,8 +106,8 @@ turn90DegreesLeft(){
 
 void main() { 
     while(1) {
-        forward(50);
-        sleep(0.25);
+        checkline();
+        //sleep(0.25);
         checkPath();
     }
 }
