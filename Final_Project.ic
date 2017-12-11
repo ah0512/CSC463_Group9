@@ -55,7 +55,6 @@ void checkPath() {
     if((analog(REFLECTIVE_FRONTR) < LINE) && (analog(REFLECTIVE_FRONTL) < LINE)) {
         stop();
         sleep(1.0);
-        blockInterCount++;
         if((analog(LIGHT_RIGHT) > SOURCE) && !block) {
          turn90DegreesRight();
          turn = reset*1;
@@ -69,6 +68,9 @@ void checkPath() {
         }else{
          forward(50);
          sleep(0.5);
+        }
+        if(block){
+         blockInterCount++;
         }
     }
 }
@@ -124,6 +126,7 @@ releaseBlock(){
    motor(3, -50);
    block = 0;
    reset = -1;
+   blockInterCount = 0;
 }
 
 void checkLine(){
