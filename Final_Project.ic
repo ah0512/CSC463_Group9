@@ -14,6 +14,8 @@ int LIGHT_RIGHT = 4; //RightLight port
 int LIGHT_LEFT = 3; //Left Light port
 int ELEVATION = 2; //probably not used
 
+int LINE = 200;
+
 int block = 0;
 int blockCount = 0;
 int turn; //-1 is left, 1 is right
@@ -130,11 +132,13 @@ releaseBlock(){
 }
 
 void checkLine(){
-   if((analog(REFLECTIVE_FRONTR) < LINE) || (analog(REFLECTIVE_FRONTL) < LINE)){
+   if((analog(REFLECTIVE_FRONTR) >= LINE) || (analog(REFLECTIVE_FRONTL) >= LINE)){
       forward(50);
    }
    else{
-      turnAround();
+      while((analog(REFLECTIVE_FRONTR) < LINE){
+         
+      }
    }  
 }
 
