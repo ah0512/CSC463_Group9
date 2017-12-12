@@ -1,0 +1,41 @@
+//Handyboard Ports
+int LEFT_MOTOR = 0;
+int RIGHT_MOTOR = 2;
+int ARM_MOTOR = 3;
+int REFLECTIVE_FRONTR = 5; //Front-Right Reflective port
+int REFLECTIVE_FRONTL = 6; //Front-Left Reflective port
+int LIGHT_RIGHT = 4; //RightLight port
+int LIGHT_LEFT = 3; //Left Light port
+int ELEVATION = 2; //probably not used
+
+
+void grabBlock(){
+   motor(3, -50);
+   //block = 1;
+}
+
+void forward(int power) {    
+   motor(RIGHT_MOTOR, power);    
+   motor(LEFT_MOTOR, power);
+}
+
+void backward(int power) {
+   motor(RIGHT_MOTOR, -power);       
+   motor(LEFT_MOTOR, -power);
+}
+
+void main(){
+    while(1){
+        motor(1, -50);
+        forward(65);
+        if(digital(15)){
+            backward(50);
+            sleep(0.25);
+            motor(1, 80);
+            forward(65);
+            sleep(0.5);
+            motor(1, -80);
+            
+        }
+    }    
+}
