@@ -50,14 +50,14 @@ void stop() {                  //makes robot stop moving
 }
 
 void turn90DegreesRight(){    //makes robot turn 90 degrees right (technically)
-  while(analog(REFLECTIVE_FRONTM < LINE)){ //while the middle reflective-opto sensor doesn't see the line
-        turnRight(90);                     //turn right
+  while(analog(REFLECTIVE_FRONTM) < LINE){ //while the middle reflective-opto sensor doesn't see the line
+        turnRight(75);                     //turn right
   }                                        //will continue once middle reflective opto sensor re-aligned
 }
 
 void turn90DegreesLeft(){                  //makes robot turn 90 degrees left
-  while(analog(REFLECTIVE_FRONTM < LINE)){ //while the middle reflective-opto sensor doesn't see the line
-        turnLeft(90);                      //turn left
+  while(analog(REFLECTIVE_FRONTM) < LINE){ //while the middle reflective-opto sensor doesn't see the line
+        turnLeft(75);                      //turn left
   }                                        //will continue once middle reflective opto sensor re-aligned
 }
 
@@ -66,7 +66,7 @@ void checkIntersection() { //checks if there is an intersection and runs through
         stop();                                           //stops
         sleep(0.5);
         if(totalBlocks >= 3){                             //if there are more than 3 total blocks dropped off it will go forward throught the intersection
-            forward(70);
+            forward(80);
         }
         if((analog(LIGHT_RIGHT) <= SOURCE) && !block) {     //if the right light sensor sees a block and it doesn't have a block
             turn90DegreesRight();                           //turns 90 degrees into that intersection
@@ -81,7 +81,7 @@ void checkIntersection() { //checks if there is an intersection and runs through
         }else if(blockInterCount == 0 && turn == 1){        //otherwise if it has not encountered an intersection with the block and turned right
           turn90DegreesRight();                             //it will turn right out of intersection
         }else{                                              //if it doesn't match anything
-         forward(70);                                       //just goes forward
+         forward(80);                                       //just goes forward
         }
         if(block){                                          //if it has a block
          blockInterCount++;                                 //it increments the intersections its gone with the block
@@ -120,17 +120,17 @@ void releaseBlock(){         //lets go of block and resets values
 }
 
 void checkLine(){                             //checks if it is following the line and if it isn't then it re-aligns
-   if((analog(REFLECTIVE_FRONTM) >= LINE)){   //if the middle reflective-opto sees the line
-      forward(60);                            //moves forward
+   if((analog(REFLECTIVE_FRONTM) >= LINE) && (analog(REFLECTIVE_FRONTL) < LINE)){   //if the middle reflective-opto sees the line
+      forward(80);                            //moves forward
    }
    else {
-     while(analog(REFLECTIVE_FRONTM < LINE)){      //while the middle sensor doesn't see the line
-            turnRight(85);                         //turns right
+     while(analog(REFLECTIVE_FRONTM) < LINE){      //while the middle sensor doesn't see the line
+            turnRight(75);                         //turns right
             if(analog(REFLECTIVE_FRONTL) >= LINE)  //if the left reflective-opto sensor sees the line
                break;                              //breaks from loop
         }
         while(analog(REFLECTIVE_FRONTM) < LINE){   //while the middle sensor doesn't see the line
-            turnLeft(85);                          //turns left
+            turnLeft(75);                          //turns left
             if(analog(REFLECTIVE_FRONTR) >= LINE)  //if the right reflective-opto sensor sees the line
                break;                              //breaks from loop
         }
