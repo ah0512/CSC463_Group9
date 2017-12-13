@@ -8,18 +8,23 @@
 int LEFT_MOTOR = 0;
 int RIGHT_MOTOR = 2;
 int ARM_MOTOR = 3;
-int REFLECTIVE_FRONTR = 5; //Front-Right Reflective port
-int REFLECTIVE_FRONTL = 6; //Front-Left Reflective port
-int LIGHT_RIGHT = 4; //RightLight port
+int REFLECTIVE_FRONTR = 4; //Front-Right Reflective port
+int REFLECTIVE_FRONTL = 5; //Front-Left Reflective port
+int REFLECTIVE_FRONTM = 2;
+int LIGHT_RIGHT = 6; //RightLight port
 int LIGHT_LEFT = 3; //Left Light port
-int ELEVATION = 2; //probably not used
+//int ELEVATION = 2; //probably not used
+int TOUCH = 15;
 
 int LINE = 200;
+int SOURCE = 245;
 
 int block = 0;
 int blockCount = 0;
-int turn; //-1 is left, 1 is right
-int reset = 1; 
+int turn = 0; //-1 is left, 1 is right
+int reset = 1;
+int blockInterCount = 0;
+int totalBlocks = 0;
 
 void forward(int power) {    
    motor(RIGHT_MOTOR, power);    
@@ -41,11 +46,13 @@ void turnRight(int power) {
    motor(LEFT_MOTOR, power);   
 }
 
+/*
 void turnAround(){ //do a 180 turn
-   motor(RIGHT_MOTOR, 80);
-   motor(LEFT_MOTOR, -80);
+   motor(RIGHT_MOTOR, 90);
+   motor(LEFT_MOTOR, -90);
    sleep(5.0);
 }
+*/
 
 void stop() {
    off(RIGHT_MOTOR);
@@ -54,117 +61,105 @@ void stop() {
 
 
 void checkIntersection() {
-    if((analog(REFLECTIVE_FRONTR) < LINE) && (analog(REFLECTIVE_FRONTL) < LINE)) {
+    if((analog(REFLECTIVE_FRONTR) >= LINE) && (analog(REFLECTIVE_FRONTL) >= LINE)) {
         stop();
-        sleep(1.0);
-        if((analog(LIGHT_RIGHT) > SOURCE) && !block) {
-         turn90DegreesRight();
-         turn = reset*1;
-        }else if((analog(LIGHT_LEFT) > SOURCE && !block)){
-         turn90DegreesLeft();
-         turn = reset*(-1);
-        }else if(blockInterCount == 0 && turn = 0){
-          turn90DegreesLeft();
-        }else if(blockInterCount == 0 && turn = 1){
-          turn90DegreesRight();
-        }else{
-         forward(50);
-         sleep(0.5);
+        sleep(0.5);
+        if(totalBlocks >= 3){
+            forward(70);
         }
-        if(block){
-         blockInterCount++;
-        }
-    }
-}
-
-/*
-int checkPath() {
-    if((analog(REFLECTIVE_FRONTR) < LINE) && (analog(REFLECTIVE_FRONTL) < LINE)) {
-        return 1;
-    }else{
-      return 0;
-    }
-   
-}
-
-void intersection(){
-   if((analog(REFLECTIVE_FRONTR) < LINE) && (analog(REFLECTIVE_FRONTL) < LINE)) {
-        stop();
-        sleep(1.0);
-        if((analog(LIGHT_RIGHT) > SOURCE) && !block) {
-         turn90DegreesRight();
-         turn = reset*1;
-        }else if((analog(LIGHT_LEFT) > SOURCE && !block)){
+        if((analog(LIGHT_RIGHT) <= SOURCE) && !block) {
+            turn90DegreesRight();
+            turn = reset*1;
+            checkBlock();
+        }else if((analog(LIGHT_LEFT) <= SOURCE && !block)){
          turn90DegreesLeft();
-         turn = reset*(-1);
+            turn = reset*(-1);
+            checkBlock();
         }else if(blockInterCount == 0 && turn == -1){
           turn90DegreesLeft();
         }else if(blockInterCount == 0 && turn == 1){
           turn90DegreesRight();
         }else{
-         forward(50);
-         sleep(0.5);
+         forward(70);
+        }
+        if(block){
+         blockInterCount++;
+        }
+        if(digital(TOUCH) && block){
+            releaseBlock();
+        }
+    }
+}
+
+void checkBlock(){
+    while(1) {
+      motor(ARM_MOTOR, 65);
+      checkLine();
+      if(digital(TOUCH) && !block){
+          grabBlock();
+          turn90DegreesLeft();
+          break;
         }
    }
 }
-*/
 
-void checkBlock(){
-  while(analog(LIGHT_SENSOR) > SOURCE) {
-      checkLine();
-      if(analog(LIGHT_SENSOR) > BLOCK && !block){
-          grabBlock();
-          turnAround();
-      }
-   }
-}
-
-grabBlock(){
-   motor(3, 50);
+void grabBlock(){
+   motor(ARM_MOTOR, -70);
    block = 1;
 }
 
-releaseBlock(){
-   motor(3, -50);
+void releaseBlock(){
+   motor(ARM_MOTOR, 65);
+   turn90DegreesRight();
    block = 0;
-   reset = -1;
+    reset = -1;
+    turn = 0;
    blockInterCount = 0;
+   totalBlocks++;
 }
 
 void checkLine(){
-   if((analog(REFLECTIVE_FRONTR) >= LINE) || (analog(REFLECTIVE_FRONTL) >= LINE)){
-      forward(50);
+   if((analog(REFLECTIVE_FRONTM) >= LINE)){
+      forward(60);
    }
-   else{
-      while((analog(REFLECTIVE_FRONTR) < LINE){
-         
-      }
-   }  
+   else {
+     while(analog(REFLECTIVE_FRONTM < LINE)){
+            turnRight(85);
+            if(analog(REFLECTIVE_FRONTL) >= LINE)
+               break;
+        }
+        while(analog(REFLECTIVE_FRONTM) < LINE){
+            turnLeft(85);
+            if(analog(REFLECTIVE_FRONTR) >= LINE)
+               break;
+        }
+    }
+    
+    if(digital(TOUCH) && block){
+        releaseBlock();
+    }
 }
 
-void turnAround(){ //do a 180 turn
-   backward(50);
-   sleep(0.1);
-   motor(RIGHT_MOTOR, 80);
-   motor(LEFT_MOTOR, -80);
-   sleep(5.0);
+void turn90DegreesRight(){
+  while(analog(REFLECTIVE_FRONTM < LINE)){
+        turnRight(90);
+  }
 }
 
-turn90DegreesRight(){
-  turnRight(80);
-  sleep(2.0);
-}
-
-turn90DegreesLeft(){
-  turnLeft(80);
-  sleep(2.0);
+void turn90DegreesLeft(){
+  while(analog(REFLECTIVE_FRONTM < LINE)){
+        turnLeft(90);
+  }
 }
 
 void main() {
-   releaseBlock();
+   motor(ARM_MOTOR, -65);
     while(1) {
-        checkline();
-        //sleep(0.25);
+        //printf("R = %d, M = %d, L = %d \n", analog(REFLECTIVE_FRONTR), analog(REFLECTIVE_FRONTM), analog(REFLECTIVE_FRONTL));
+        printf("Left: %d, Right: %d\n",analog(LIGHT_LEFT), analog(LIGHT_RIGHT));
+        //sleep(0.1);
+        checkLine();
+        //sleep(0.5);
         checkIntersection();
     }
 }
