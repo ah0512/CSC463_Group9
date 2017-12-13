@@ -5,151 +5,140 @@
 */
 
 //Handyboard Ports
-int LEFT_MOTOR = 0;
-int RIGHT_MOTOR = 2;
-int ARM_MOTOR = 3;
+int LEFT_MOTOR = 0;        //Left Motor port
+int RIGHT_MOTOR = 2;       //Right Motor port
+int ARM_MOTOR = 3;         //Arm Motor port
 int REFLECTIVE_FRONTR = 4; //Front-Right Reflective port
 int REFLECTIVE_FRONTL = 5; //Front-Left Reflective port
-int REFLECTIVE_FRONTM = 2;
-int LIGHT_RIGHT = 6; //RightLight port
-int LIGHT_LEFT = 3; //Left Light port
-//int ELEVATION = 2; //probably not used
-int TOUCH = 15;
+int REFLECTIVE_FRONTM = 2; //Front-Middle Reflective port
+int LIGHT_RIGHT = 6;       //Right-Light port
+int LIGHT_LEFT = 3;        //Left-Light port
+int TOUCH = 15;            //Touch Sensor port
 
-int LINE = 200;
-int SOURCE = 245;
+int LINE = 200;            //Value of line
+int SOURCE = 245;          //Value of light from block
 
-int block = 0;
-int blockCount = 0;
-int turn = 0; //-1 is left, 1 is right
-int reset = 1;
-int blockInterCount = 0;
-int totalBlocks = 0;
+int block = 0;             //0 if no block, 1 if holding block
+int turn = 0;              //-1 is left, 1 is right
+int reset = 1;             //switches direction it needs to turn from intersection if necessary
+int blockInterCount = 0;   //number of intersection robot went while holding block
+int totalBlocks = 0;       //total blocks it has dropped off
 
-void forward(int power) {    
+void forward(int power) {      //makes robot move forward 
    motor(RIGHT_MOTOR, power);    
    motor(LEFT_MOTOR, power);
 }
 
-void backward(int power) {
+void backward(int power) {     //makes robot move backward
    motor(RIGHT_MOTOR, -power);       
    motor(LEFT_MOTOR, -power);
 }
 
-void turnLeft(int power) {
+void turnLeft(int power) {     //makes robot turn left
    motor(RIGHT_MOTOR, power);    
    motor(LEFT_MOTOR, -power);
 }
 
-void turnRight(int power) {
+void turnRight(int power) {    //makes robot turn right
    motor(RIGHT_MOTOR, -power);    
    motor(LEFT_MOTOR, power);   
 }
 
-/*
-void turnAround(){ //do a 180 turn
-   motor(RIGHT_MOTOR, 90);
-   motor(LEFT_MOTOR, -90);
-   sleep(5.0);
-}
-*/
-
-void stop() {
+void stop() {                  //makes robot stop moving
    off(RIGHT_MOTOR);
    off(LEFT_MOTOR);
 }
 
+void turn90DegreesRight(){    //makes robot turn 90 degrees right (technically)
+  while(analog(REFLECTIVE_FRONTM < LINE)){ //while the middle reflective-opto sensor doesn't see the line
+        turnRight(90);                     //turn right
+  }                                        //will continue once middle reflective opto sensor re-aligned
+}
 
-void checkIntersection() {
-    if((analog(REFLECTIVE_FRONTR) >= LINE) && (analog(REFLECTIVE_FRONTL) >= LINE)) {
-        stop();
+void turn90DegreesLeft(){                  //makes robot turn 90 degrees left
+  while(analog(REFLECTIVE_FRONTM < LINE)){ //while the middle reflective-opto sensor doesn't see the line
+        turnLeft(90);                      //turn left
+  }                                        //will continue once middle reflective opto sensor re-aligned
+}
+
+void checkIntersection() { //checks if there is an intersection and runs through several commands
+    if((analog(REFLECTIVE_FRONTR) >= LINE) && (analog(REFLECTIVE_FRONTL) >= LINE)) { //if left and right reflective-opto sensor see the line then there is an intersection
+        stop();                                           //stops
         sleep(0.5);
-        if(totalBlocks >= 3){
+        if(totalBlocks >= 3){                             //if there are more than 3 total blocks dropped off it will go forward throught the intersection
             forward(70);
         }
-        if((analog(LIGHT_RIGHT) <= SOURCE) && !block) {
-            turn90DegreesRight();
-            turn = reset*1;
-            checkBlock();
-        }else if((analog(LIGHT_LEFT) <= SOURCE && !block)){
-         turn90DegreesLeft();
-            turn = reset*(-1);
-            checkBlock();
-        }else if(blockInterCount == 0 && turn == -1){
-          turn90DegreesLeft();
-        }else if(blockInterCount == 0 && turn == 1){
-          turn90DegreesRight();
-        }else{
-         forward(70);
+        if((analog(LIGHT_RIGHT) <= SOURCE) && !block) {     //if the right light sensor sees a block and it doesn't have a block
+            turn90DegreesRight();                           //turns 90 degrees into that intersection
+            turn = reset*1;                                 //saves turn as 1 (right) 
+            checkBlock();                                   //checks block
+        }else if((analog(LIGHT_LEFT) <= SOURCE && !block)){ //otherwise if the left light sensor sees a block and doesn't have a block
+         turn90DegreesLeft();                               //turns 90 degrees left into that intersection
+            turn = reset*(-1);                              //saves turn as -1 (left)
+            checkBlock();                                   //checks for block
+        }else if(blockInterCount == 0 && turn == -1){       //otherwise if it has not encountered an intersection with the block and turned left
+          turn90DegreesLeft();                              //it will turn left out of intersection
+        }else if(blockInterCount == 0 && turn == 1){        //otherwise if it has not encountered an intersection with the block and turned right
+          turn90DegreesRight();                             //it will turn right out of intersection
+        }else{                                              //if it doesn't match anything
+         forward(70);                                       //just goes forward
         }
-        if(block){
-         blockInterCount++;
+        if(block){                                          //if it has a block
+         blockInterCount++;                                 //it increments the intersections its gone with the block
         }
-        if(digital(TOUCH) && block){
-            releaseBlock();
+        if(digital(TOUCH) && block){                        //if the touch sensor is hit and it has a block
+            releaseBlock();                                 //releases block and goes to find another one
         }
     }
 }
 
-void checkBlock(){
+void checkBlock(){                    //finds the block in the hallway
     while(1) {
-      motor(ARM_MOTOR, 65);
-      checkLine();
-      if(digital(TOUCH) && !block){
-          grabBlock();
-          turn90DegreesLeft();
-          break;
+      motor(ARM_MOTOR, 65);           //opens arms of the claw
+      checkLine();                    //makes sure it is on the line
+      if(digital(TOUCH) && !block){   //if it hit the touch sensor and doesn't have a block
+          grabBlock();                //grabs block
+          turn90DegreesLeft();        //turns until it re-aligns with the line (180 degree turn)
+          break;                      //breaks out of loop 
         }
    }
 }
 
-void grabBlock(){
-   motor(ARM_MOTOR, -70);
-   block = 1;
+void grabBlock(){          //grabs a block
+   motor(ARM_MOTOR, -70);  //closes claw
+   block = 1;              //sets block to 1 to show it is carrying a block
 }
 
-void releaseBlock(){
-   motor(ARM_MOTOR, 65);
-   turn90DegreesRight();
-   block = 0;
-    reset = -1;
-    turn = 0;
-   blockInterCount = 0;
-   totalBlocks++;
+void releaseBlock(){         //lets go of block and resets values
+   motor(ARM_MOTOR, 65);     //opens arms
+   turn90DegreesLeft();     //turns around 180 degrees
+   block = 0;               //indicates that it is not carrying a block
+    reset = -1;             //set reset to -1 so it will go opposite of every turn in intersections to get back to dropoff zone
+    turn = 0;               //resets turn to 0
+   blockInterCount = 0;     //reset intersection travelled with block to 0
+   totalBlocks++;           //increment the total number of blocks fetched
 }
 
-void checkLine(){
-   if((analog(REFLECTIVE_FRONTM) >= LINE)){
-      forward(60);
+void checkLine(){                             //checks if it is following the line and if it isn't then it re-aligns
+   if((analog(REFLECTIVE_FRONTM) >= LINE)){   //if the middle reflective-opto sees the line
+      forward(60);                            //moves forward
    }
    else {
-     while(analog(REFLECTIVE_FRONTM < LINE)){
-            turnRight(85);
-            if(analog(REFLECTIVE_FRONTL) >= LINE)
-               break;
+     while(analog(REFLECTIVE_FRONTM < LINE)){      //while the middle sensor doesn't see the line
+            turnRight(85);                         //turns right
+            if(analog(REFLECTIVE_FRONTL) >= LINE)  //if the left reflective-opto sensor sees the line
+               break;                              //breaks from loop
         }
-        while(analog(REFLECTIVE_FRONTM) < LINE){
-            turnLeft(85);
-            if(analog(REFLECTIVE_FRONTR) >= LINE)
-               break;
+        while(analog(REFLECTIVE_FRONTM) < LINE){   //while the middle sensor doesn't see the line
+            turnLeft(85);                          //turns left
+            if(analog(REFLECTIVE_FRONTR) >= LINE)  //if the right reflective-opto sensor sees the line
+               break;                              //breaks from loop
         }
     }
     
-    if(digital(TOUCH) && block){
-        releaseBlock();
+    if(digital(TOUCH) && block){                   //if the touch sensor is hit and it has a block
+        releaseBlock();                            //it releaseses the block
     }
-}
-
-void turn90DegreesRight(){
-  while(analog(REFLECTIVE_FRONTM < LINE)){
-        turnRight(90);
-  }
-}
-
-void turn90DegreesLeft(){
-  while(analog(REFLECTIVE_FRONTM < LINE)){
-        turnLeft(90);
-  }
 }
 
 void main() {
